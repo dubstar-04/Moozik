@@ -32,20 +32,23 @@ class GmusicAPI():
             return False
         else:
             print("Success, credentials accepted.")
-            #self.load_library()
-            self.load_playlists()
+            self.load_library()
+            #self.load_playlists()
             return True
         
 
     def load_library(self):
         self.library = self.api.get_all_songs()
-        print(self.library)
+        #print(self.library)
         
     def load_playlists(self):
         self.playlists = self.api.get_all_playlists()
         #print(self.playlists)
 
-'''        
+    def get_library(self):
+        return self.library
+
+'''
     def get_all_songs(self):
     def get_stream_url(self):
     def rate_songs(self):

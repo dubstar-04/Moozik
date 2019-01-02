@@ -2,5 +2,6 @@
 <gresources>
   <gresource prefix="/org/gnome/Moosic">
     <file>window.ui</file>
+    <file>albumWidget.ui</file>
   </gresource>
 </gresources>

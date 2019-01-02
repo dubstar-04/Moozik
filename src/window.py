@@ -20,6 +20,8 @@ from .gi_composites import GtkTemplate
 from .settings import *
 from .gmusicapi import * 
 
+from .albumWidget import *
+
 
 @GtkTemplate(ui='/org/gnome/Moosic/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
@@ -28,6 +30,9 @@ class MoosicWindow(Gtk.ApplicationWindow):
     #set up all the accessible widgets
     username_entry = GtkTemplate.Child()
     password_entry = GtkTemplate.Child()
+
+    album_flowbox = GtkTemplate.Child()
+    song_listbox = GtkTemplate.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -38,9 +43,22 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
         
         self.gmusic = GmusicAPI()
-        self.gmusic.logged_in()
-   
-'''     
+
+        self.load_library()
+
+    def load_library(self):
+
+        logged_in = self.gmusic.logged_in()
+
+        if logged_in:
+            library = self.gmusic.get_library()
+
+            for song in library:
+                self.album_flowbox.add(AlbumWidget(song))
+
+        else:
+            print('not logged in')
+
     @GtkTemplate.Callback
     def username_changed(self, sender):
         username =  self.username_entry.get_text()
@@ -52,4 +70,3 @@ class MoosicWindow(Gtk.ApplicationWindow):
         password =  self.password_entry.get_text()
         print('password changed:', password)
         #self.settings.set_password(password)
-'''    
