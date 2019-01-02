@@ -1,13 +1,17 @@
 from gmusicapi import Mobileclient
 from .settings import *
 
-
+import os
+import urllib.request
+#import re
+import string
 
 class GmusicAPI():
     def __init__(self):
         self.settings = Settings()
         self.api = Mobileclient()
         self.library = None
+        self.albums = []
         self.playlists = None
 
 
@@ -39,14 +43,77 @@ class GmusicAPI():
 
     def load_library(self):
         self.library = self.api.get_all_songs()
+        self.load_albums()
+        self.load_album_art()
+        print('Album count :', len(self.albums))
         #print(self.library)
-        
+
+    def load_albums(self):
+        for song in self.library:
+            album_title = song.get("album")
+            artist = song.get("artist")
+            album_art_path = self.get_album_art_name(album_title)
+
+            #TODO Should we always used the first album art?
+            album_art_url = ''
+            try:
+                album_art_url = song.get("albumArtRef")[0].get("url")
+            except Exception:
+                print('no album art available')
+
+            album = {'title':album_title, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
+
+            #if album not in self.albums:
+            if not any(album.get('title', None) == album_title for album in self.albums):
+                self.albums.append(album)
+
+    def load_album_art(self):
+        for album in self.albums:
+            file_path = album.get('album_art_path')
+            art_url = album.get('album_art_url')
+            if len(art_url):
+                if not os.path.isfile(file_path):
+                    print('file path:', file_path, ' url: ', art_url)
+                    try:
+                        urllib.request.urlretrieve(art_url, file_path)
+                    except Exception:
+                        print('Artwork could not be downloaded:', Exception)
+
     def load_playlists(self):
         self.playlists = self.api.get_all_playlists()
         #print(self.playlists)
 
     def get_library(self):
         return self.library
+
+    def get_albums(self):
+        return self.albums
+
+    def art_cache(self):
+        xdg_cache_dir = os.environ.get('XDG_CACHE_HOME')
+
+        cache_dir = os.path.join(xdg_cache_dir, 'album_art')
+
+        try:
+            os.makedirs(cache_dir, mode=0o755, exist_ok=True)
+        except EnvironmentError:
+            return None
+        else:
+            return cache_dir
+
+    def get_album_art_name(self, album_title):
+        album_title = self.slugify(album_title)
+        return self.art_cache() + '/' + album_title + '.jpg'
+
+    def slugify(self, s):
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        filename = ''.join(c for c in s if c in valid_chars)
+        filename = filename.replace(' ','-')
+        return filename
+
+
+
+
 
 '''
     def get_all_songs(self):

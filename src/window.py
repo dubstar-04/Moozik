@@ -22,6 +22,8 @@ from .gmusicapi import *
 
 from .albumWidget import *
 
+import os
+
 
 @GtkTemplate(ui='/org/gnome/Moosic/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
@@ -51,10 +53,14 @@ class MoosicWindow(Gtk.ApplicationWindow):
         logged_in = self.gmusic.logged_in()
 
         if logged_in:
-            library = self.gmusic.get_library()
+            albums = self.gmusic.get_albums()
 
-            for song in library:
-                self.album_flowbox.add(AlbumWidget(song))
+            count = 0
+            for album in albums:
+                #print('Album in window:', album)
+                if count < 20:
+                    self.album_flowbox.add(AlbumWidget(album))
+                count = count + 1
 
         else:
             print('not logged in')

@@ -1,5 +1,7 @@
 from gi.repository import Gtk
 from .gi_composites import GtkTemplate
+from gi.repository.GdkPixbuf import Pixbuf
+import os
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/albumWidget.ui')
 class AlbumWidget(Gtk.EventBox):
@@ -10,29 +12,24 @@ class AlbumWidget(Gtk.EventBox):
 
     AlbumArt_Image = Gtk.Template.Child()
     AlbumTitle_Label = Gtk.Template.Child()
+    Artist_Label = Gtk.Template.Child()
     
-    def __init__(self, media):
+    def __init__(self, album):
         super().__init__()
 
-        self._media = media
+        self.album = album
         self.load_data()
 
     def load_data(self):
 
-        song = self._media
-        #print(song)
-        album_title = song.get("album")
-        artist = song.get("artist")
-        track_title = song.get("title")
-        #TODO Should we always used the first album art?
-        album_art = ''
-        try:
-            album_art = song.get("albumArtRef")[0].get("url")
-        except Exception:
-            print('no album art available')
+        album = self.album
+        album_title = album.get("title")
+        artist = album.get("artist")
+        album_art_path = album.get("album_art_path")
 
-        #print(artist, album_title, track_title, album_art)
+        if os.path.isfile(album_art_path):
+            self.AlbumArt_Image.set_from_pixbuf(Pixbuf.new_from_file(album_art_path))
 
-        #self.AlbumArt_Image = album_art
         self.AlbumTitle_Label.set_text(album_title)
+        self.Artist_Label.set_text(artist)
 
