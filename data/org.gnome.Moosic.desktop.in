@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=moosic
+Exec=moosic
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
