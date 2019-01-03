@@ -51,6 +51,7 @@ class GmusicAPI():
     def load_albums(self):
         for song in self.library:
             album_title = song.get("album")
+            album_id = song.get("albumId")
             artist = song.get("artist")
             album_art_path = self.get_album_art_name(album_title)
 
@@ -61,7 +62,7 @@ class GmusicAPI():
             except Exception:
                 print('no album art available')
 
-            album = {'title':album_title, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
+            album = {'title':album_title, 'album_id':album_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
 
             #if album not in self.albums:
             if not any(album.get('title', None) == album_title for album in self.albums):
@@ -111,9 +112,20 @@ class GmusicAPI():
         filename = filename.replace(' ','-')
         return filename
 
+    def get_album(self, album_index):
+        return self.albums[album_index]
 
+    def get_album_tracks(self, album_index):
 
+        album_title = self.albums[album_index].get('title')
 
+        tracks = []
+
+        for song in self.library:
+            if song.get('album') == album_title:
+                tracks.append(song)
+
+        return tracks
 
 '''
     def get_all_songs(self):

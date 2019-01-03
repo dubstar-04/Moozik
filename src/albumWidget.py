@@ -3,7 +3,7 @@ from .gi_composites import GtkTemplate
 from gi.repository.GdkPixbuf import Pixbuf
 import os
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/albumWidget.ui')
+@Gtk.Template(resource_path='/org/gnome/Moosic/ui/albumWidget.ui')
 class AlbumWidget(Gtk.EventBox):
 
     __gtype_name__ = 'albumWidget'
@@ -33,3 +33,5 @@ class AlbumWidget(Gtk.EventBox):
         self.AlbumTitle_Label.set_text(album_title)
         self.Artist_Label.set_text(artist)
 
+    def get_album_title():
+        return self.album.get('title')

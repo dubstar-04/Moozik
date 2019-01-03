@@ -15,17 +15,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gi
 from gi.repository import Gtk
+gi.require_version('Handy', '0.0')
+from gi.repository import Handy
 from .gi_composites import GtkTemplate
 from .settings import *
 from .gmusicapi import * 
 
 from .albumWidget import *
+from .playlist_listbox_row import *
 
 import os
 
 
-@GtkTemplate(ui='/org/gnome/Moosic/window.ui')
+@GtkTemplate(ui='/org/gnome/Moosic/ui/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'MoosicWindow'
 
@@ -34,7 +38,22 @@ class MoosicWindow(Gtk.ApplicationWindow):
     password_entry = GtkTemplate.Child()
 
     album_flowbox = GtkTemplate.Child()
-    song_listbox = GtkTemplate.Child()
+    playlist_flowbox = GtkTemplate.Child()
+    window_stack = GtkTemplate.Child()
+    main_stack = GtkTemplate.Child()
+    stack_switcher = GtkTemplate.Child()
+    back_button = GtkTemplate.Child()
+
+    #current playlist page
+    playlist_album_art = GtkTemplate.Child()
+    playlist_album_title = GtkTemplate.Child()
+    playlist_artist = GtkTemplate.Child()
+    playlist_listview = GtkTemplate.Child()
+    #current_playlist_store = Gtk.ListStore(int, str, str, str)
+
+    #playbar
+    play_widget_revealer = GtkTemplate.Child()
+    #self.play_widget_revealer.set_reveal_child(False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,15 +74,22 @@ class MoosicWindow(Gtk.ApplicationWindow):
         if logged_in:
             albums = self.gmusic.get_albums()
 
-            count = 0
+            #count = 0
             for album in albums:
                 #print('Album in window:', album)
-                if count < 20:
-                    self.album_flowbox.add(AlbumWidget(album))
-                count = count + 1
+                #if count < 20:
+                self.album_flowbox.add(AlbumWidget(album))
+                #count = count + 1
 
         else:
             print('not logged in')
+
+    @GtkTemplate.Callback
+    def back_button_pressed(self, sender):
+        self.stack_switcher.set_visible(True)
+        self.back_button.set_visible(False)
+        self.main_stack.set_visible_child_name('main_stack_page_1')
+
 
     @GtkTemplate.Callback
     def username_changed(self, sender):
@@ -76,3 +102,28 @@ class MoosicWindow(Gtk.ApplicationWindow):
         password =  self.password_entry.get_text()
         print('password changed:', password)
         #self.settings.set_password(password)
+
+    @GtkTemplate.Callback
+    def album_selected(self, sender, child):
+        #print('album clicked:', sender, child)
+        #print('album:', child.get_index())
+
+        #print('visible child:', self.window_stack.get_visible_child_name())
+        self.main_stack.set_visible_child_name('main_stack_page_2')
+        self.stack_switcher.set_visible(False)
+        self.back_button.set_visible(True)
+
+        album = self.gmusic.get_album(child.get_index())
+
+        album_title = album.get("title")
+        artist = album.get("artist")
+        album_art_path = album.get("album_art_path")
+
+        self.playlist_album_title.set_text(album_title)
+        self.playlist_artist.set_text(artist)
+        self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file(album_art_path))
+
+        tracks = self.gmusic.get_album_tracks(child.get_index())
+
+        for track in tracks:
+            self.playlist_listview.add(PlaylistRow(track))
