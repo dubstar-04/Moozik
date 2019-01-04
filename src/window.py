@@ -20,11 +20,12 @@ from gi.repository import Gtk
 #gi.require_version('Handy', '0.0')
 #from gi.repository import Handy
 from .gi_composites import GtkTemplate
+
 from .settings import *
 from .gmusicapi import * 
-
 from .albumWidget import *
 from .playlist_listbox_row import *
+from .player import *
 
 import os
 
@@ -55,6 +56,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
     play_widget_revealer = GtkTemplate.Child()
     #self.play_widget_revealer.set_reveal_child(False)
 
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -64,6 +66,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
         
         self.gmusic = GmusicAPI()
+        self.player = Player()
 
         self.load_library()
 
@@ -126,4 +129,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
         tracks = self.gmusic.get_album_tracks(child.get_index())
 
         for track in tracks:
-            self.playlist_listview.add(PlaylistRow(track))
+            play_list_track = PlaylistRow(track)
+            play_list_track.connect("play_track_signal", self.play_track)
+            self.playlist_listview.add(play_list_track)
+
+    def play_track(self, sender, track_id):
+        print('Play this track:', track_id)
+        self.gmusic.get_stream_url(track_id)
+        

@@ -4,6 +4,8 @@ from gi.repository import Gio
 class Settings:
     def __init__(self):
         self.settings = Gio.Settings('org.gnome.Moosic')
+        #TODO
+        #Add a drop down for Audio Quality
            
     def set_username(self, username):
         print('set_username:',username )

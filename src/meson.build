@@ -33,7 +33,8 @@ moosic_sources = [
   'settings.py',
   'gmusicapi.py',
   'albumWidget.py',
-  'playlist_listbox_row.py'
+  'playlist_listbox_row.py',
+  'player.py'
 ]
 
 install_data(moosic_sources, install_dir: moduledir)

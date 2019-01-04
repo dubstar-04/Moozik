@@ -154,7 +154,8 @@
                             <property name="homogeneous">True</property>
                             <property name="column_spacing">4</property>
                             <property name="row_spacing">4</property>
-                            <property name="max_children_per_line">4</property>
+                            <property name="min_children_per_line">2</property>
+                            <property name="max_children_per_line">5</property>
                             <signal name="child-activated" handler="album_selected" swapped="no"/>
                           </object>
                         </child>
