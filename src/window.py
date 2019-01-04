@@ -135,5 +135,6 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
     def play_track(self, sender, track_id):
         print('Play this track:', track_id)
-        self.gmusic.get_stream_url(track_id)
+        track_url = self.gmusic.get_stream_url(track_id)
+        self.player.player_play(track_url)
         

@@ -137,7 +137,9 @@ class GmusicAPI():
         return tracks
 
     def get_stream_url(self, track_id):
-        print('Stream Url',self.api.get_stream_url(track_id, self.device_id))
+        track_url = self.api.get_stream_url(track_id, self.device_id)
+        print('Stream Url',track_url)
+        return track_url
 
 '''
     def get_all_songs(self):
