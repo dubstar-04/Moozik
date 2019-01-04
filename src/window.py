@@ -17,8 +17,8 @@
 
 import gi
 from gi.repository import Gtk
-gi.require_version('Handy', '0.0')
-from gi.repository import Handy
+#gi.require_version('Handy', '0.0')
+#from gi.repository import Handy
 from .gi_composites import GtkTemplate
 from .settings import *
 from .gmusicapi import * 
@@ -121,7 +121,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.playlist_album_title.set_text(album_title)
         self.playlist_artist.set_text(artist)
-        self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file(album_art_path))
+        self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 150, 150))
 
         tracks = self.gmusic.get_album_tracks(child.get_index())
 

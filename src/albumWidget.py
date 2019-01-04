@@ -28,10 +28,14 @@ class AlbumWidget(Gtk.EventBox):
         album_art_path = album.get("album_art_path")
 
         if os.path.isfile(album_art_path):
-            self.AlbumArt_Image.set_from_pixbuf(Pixbuf.new_from_file(album_art_path))
+            self.AlbumArt_Image.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 150, 150))
 
         self.AlbumTitle_Label.set_text(album_title)
         self.Artist_Label.set_text(artist)
 
     def get_album_title():
         return self.album.get('title')
+
+    @GtkTemplate.Callback
+    def album_selected(self, caller):
+        print('album pressed')
