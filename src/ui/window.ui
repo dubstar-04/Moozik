@@ -318,12 +318,13 @@
                 <property name="margin_left">6</property>
                 <property name="margin_right">6</property>
                 <child>
-                  <object class="GtkButton" id="play_widget_play_pause_Button">
+                  <object class="GtkButton" id="play_widget_play_pause_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="play_pause" swapped="no"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="play_pause_btn_image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="icon_name">media-playback-start-symbolic</property>
