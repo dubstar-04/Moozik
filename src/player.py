@@ -16,7 +16,8 @@ class Player_State(Enum):
 class Player(GObject.GObject):
 
     Gst.init(None)
-    __gsignals__ =  {'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,))}
+    __gsignals__ =  {'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
+                     'player_progress_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (float,))}
 
 
     def __init__(self, gmusic):
@@ -24,8 +25,10 @@ class Player(GObject.GObject):
 
         self.state = Player_State.STOPPED
         self.duration = 0
+        self.progress = 0
         self.current_playlist_position = -1
         self.playlist = []
+        self.timeout_id = None
 
         self.gmusic = gmusic
 
@@ -42,7 +45,8 @@ class Player(GObject.GObject):
         self.state = Player_State.PLAYING
         self.emit("player_state_change_signal", self.state.value)
         self.player.set_state(Gst.State.PLAYING)
-        GObject.timeout_add(1000, self.player_update_slider)
+        #self.timeout_id =
+        GObject.timeout_add(1000, self.player_update_progress)
 
     def player_pause(self):
         self.state = Player_State.PAUSED
@@ -70,6 +74,7 @@ class Player(GObject.GObject):
 
     def player_on_message(self, bus, message):
         t = message.type
+        print('dbus message:', t)
         if t == Gst.MessageType.EOS:
             self.player.set_state(Gst.State.NULL)
         elif t == Gst.MessageType.ERROR:
@@ -88,14 +93,19 @@ class Player(GObject.GObject):
 
     '''
 
-    def player_update_slider(self):
+    def player_update_progress(self):
         #https://github.com/hadware/gstreamer-python-player/blob/master/seek.py
         if not self.state == Player_State.PLAYING:
-            return False # cancel timeout
+            #gobject.source_remove(self.timeout_id)
+            print('Timer Stopped')
+            return False
         else:
-            success, self.duration = self.player.query_duration(Gst.Format.TIME)
+            success, track_duration = self.player.query_duration(Gst.Format.TIME)
+            self.duration = track_duration / Gst.SECOND
             success, position = self.player.query_position(Gst.Format.TIME)
-            print('Duration:', self.duration / Gst.SECOND, 'Position:', position / Gst.SECOND, 'Complete:', position / self.duration )
+            self.progress = position / Gst.SECOND
+            print('Player_progress:', self.progress, self.duration)
+            self.emit("player_progress_change_signal", self.progress)
             return True
 
     def player_load_track(self, playlist_position):
@@ -116,8 +126,11 @@ class Player(GObject.GObject):
                 self.player_load_track(self.current_playlist_position)
 
 
-    #def get_previous_track(self):
+    def player_get_track_duration(self):
+        return self.duration
 
+    def player_get_track_progress(self):
+        return self.progress
 
 
 

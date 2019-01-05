@@ -74,7 +74,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
         self.player.connect("player_state_change_signal", self.handle_player_states)
-
+        self.player.connect("player_progress_change_signal", self.playbar_widget_slider_update)
         self.load_library()
 
     def load_library(self):
@@ -182,13 +182,16 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))
 
+
+
     def player_paused_state(self):
         pass
 
-
-    def playbar_widget_slider_update():
-        pass
-        #play_widget_progress_duration =
-        #playwidget_slider =
-
+    def playbar_widget_slider_update(self, sender, progress):
+        print('Track Progress:', progress)
+        self.playwidget_slider.set_range(0, self.player.player_get_track_duration())
+        #self.playwidget_slider.handler_block(self.playwidget_slider.handler_id)
+        self.playwidget_slider.set_value(progress)
+        self.play_widget_progress_duration.set_text(str(progress))
+        #self.playwidget_slider.handler_unblock(self.playwidget_slider.handler_id)
         
