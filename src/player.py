@@ -74,7 +74,7 @@ class Player(GObject.GObject):
 
     def player_on_message(self, bus, message):
         t = message.type
-        print('dbus message:', t)
+        #print('dbus message:', t)
         if t == Gst.MessageType.EOS:
             self.player.set_state(Gst.State.NULL)
         elif t == Gst.MessageType.ERROR:
@@ -86,12 +86,9 @@ class Player(GObject.GObject):
         return self.state
 
 
-    '''
-    def on_slider_seek(self, widget):
-        seek_time_secs = self.slider.get_value()
-        self.player.seek_simple(Gst.Format.TIME,  Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, seek_time_secs * Gst.SECOND)
-
-    '''
+    def player_seek(self, seek_position):
+        print('player_seek:', seek_position, 'duration:', self.duration)
+        self.player.seek_simple(Gst.Format.TIME,  Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, seek_position * Gst.SECOND)
 
     def player_update_progress(self):
         #https://github.com/hadware/gstreamer-python-player/blob/master/seek.py
@@ -104,7 +101,7 @@ class Player(GObject.GObject):
             self.duration = track_duration / Gst.SECOND
             success, position = self.player.query_position(Gst.Format.TIME)
             self.progress = position / Gst.SECOND
-            print('Player_progress:', self.progress, self.duration)
+            #print('Player_progress:', self.progress, self.duration)
             self.emit("player_progress_change_signal", self.progress)
             return True
 

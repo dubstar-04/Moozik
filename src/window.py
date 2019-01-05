@@ -62,7 +62,6 @@ class MoosicWindow(Gtk.ApplicationWindow):
     play_widget_album_art = GtkTemplate.Child()
     play_widget_play_pause_Button = GtkTemplate.Child()
 
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
@@ -75,6 +74,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.player = Player(self.gmusic)
         self.player.connect("player_state_change_signal", self.handle_player_states)
         self.player.connect("player_progress_change_signal", self.playbar_widget_slider_update)
+        self.playwidget_slider_handler_id = self.playwidget_slider.connect("value-changed", self.track_seek)
         self.load_library()
 
     def load_library(self):
@@ -182,6 +182,9 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))
 
+    @GtkTemplate.Callback
+    def track_seek(self, widget):
+        self.player.player_seek(self.playwidget_slider.get_value())
 
 
     def player_paused_state(self):
@@ -190,8 +193,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def playbar_widget_slider_update(self, sender, progress):
         print('Track Progress:', progress)
         self.playwidget_slider.set_range(0, self.player.player_get_track_duration())
-        #self.playwidget_slider.handler_block(self.playwidget_slider.handler_id)
+        self.playwidget_slider.handler_block(self.playwidget_slider_handler_id)
         self.playwidget_slider.set_value(progress)
         self.play_widget_progress_duration.set_text(str(progress))
-        #self.playwidget_slider.handler_unblock(self.playwidget_slider.handler_id)
+        self.playwidget_slider.handler_unblock(self.playwidget_slider_handler_id)
         
