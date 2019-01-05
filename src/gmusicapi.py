@@ -45,7 +45,7 @@ class GmusicAPI():
 
     def get_device_id(self):
         device_ids = self.api.get_registered_devices()
-        print('device_ids:', device_ids)
+        #print('device_ids:', device_ids)
         self.device_id = device_ids[0].get("id").replace('0x', '')
         print('Device ID:', self.device_id)
 
@@ -140,6 +140,12 @@ class GmusicAPI():
         track_url = self.api.get_stream_url(track_id, self.device_id)
         print('Stream Url',track_url)
         return track_url
+
+    def get_track_from_id(self, track_id):
+        for track in self.library:
+            if track.get('id') == track_id:
+                return track
+
 
 '''
     def get_all_songs(self):

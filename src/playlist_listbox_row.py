@@ -30,7 +30,7 @@ class PlaylistRow(Gtk.EventBox):
 
     @GtkTemplate.Callback
     def playlist_track_selected(self, sender, child):
-        print('Playlist Track Clicked:', self.track.get('id'))
+        #print('Playlist Track Clicked:', self.track)
         self.emit("play_track_signal", self.track.get('id'))
 
     @GtkTemplate.Callback

@@ -29,7 +29,6 @@ from .player import *
 
 import os
 
-
 @GtkTemplate(ui='/org/gnome/Moosic/ui/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'MoosicWindow'
@@ -55,6 +54,13 @@ class MoosicWindow(Gtk.ApplicationWindow):
     #playbar
     play_widget_revealer = GtkTemplate.Child()
     #self.play_widget_revealer.set_reveal_child(False)
+    play_widget_track_title = GtkTemplate.Child()
+    playwidget_artist = GtkTemplate.Child()
+    play_widget_progress_duration = GtkTemplate.Child()
+    playwidget_slider = GtkTemplate.Child()
+    play_widget_show_playlist = GtkTemplate.Child()
+    play_widget_album_art = GtkTemplate.Child()
+    play_widget_play_pause_Button = GtkTemplate.Child()
 
 
     def __init__(self, **kwargs):
@@ -66,7 +72,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
         
         self.gmusic = GmusicAPI()
-        self.player = Player()
+        self.player = Player(self.gmusic)
+        self.player.connect("player_state_change_signal", self.handle_player_states)
 
         self.load_library()
 
@@ -91,7 +98,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def back_button_pressed(self, sender):
         self.stack_switcher.set_visible(True)
         self.back_button.set_visible(False)
+        #TODO rename the stack pages to something more meaningful
         self.main_stack.set_visible_child_name('main_stack_page_1')
+        #print('playlist_listview_len:', len(self.playlist_listview) )
+        for track in self.playlist_listview.get_children():
+            self.playlist_listview.remove(track)
 
 
     @GtkTemplate.Callback
@@ -128,13 +139,56 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         tracks = self.gmusic.get_album_tracks(child.get_index())
 
+        #TODO sort tracks by album order
         for track in tracks:
             play_list_track = PlaylistRow(track)
             play_list_track.connect("play_track_signal", self.play_track)
             self.playlist_listview.add(play_list_track)
 
     def play_track(self, sender, track_id):
-        print('Play this track:', track_id)
-        track_url = self.gmusic.get_stream_url(track_id)
-        self.player.player_play(track_url)
+        track = self.gmusic.get_track_from_id(track_id)
+        self.player.player_clear_playlist()
+        self.player.player_add_to_playlist([track])
+        self.player.player_get_next_track()
+
+    def handle_player_states(self, sender, state):
+
+        print('update_play_bar:', sender, state)
+        player_state = self.player.player_get_state().value
+        print('player state:', player_state)
+
+        if player_state == 1:
+            print('player is stopped')
+            self.player_stopped_state()
+        elif player_state == 2:
+            print('player is playing')
+            self.player_playing_state()
+        elif player_state == 3:
+            print('player is paused')
+            self.player_pause_state()
+
+    def player_stopped_state(self):
+        self.play_widget_revealer.set_reveal_child(False)
+
+    def player_playing_state(self):
+        self.play_widget_revealer.set_reveal_child(True)
+
+        track = self.player.player_get_playing_track()
+
+        self.play_widget_track_title.set_text(track.get('title'))
+        self.playwidget_artist.set_text(track.get('artist'))
+
+        album_art_path = self.gmusic.get_album_art_name(track.get('album'))
+
+        self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))
+
+    def player_paused_state(self):
+        pass
+
+
+    def playbar_widget_slider_update():
+        pass
+        #play_widget_progress_duration =
+        #playwidget_slider =
+
         
