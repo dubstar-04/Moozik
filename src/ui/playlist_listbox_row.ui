@@ -9,7 +9,6 @@
     <property name="margin_right">4</property>
     <property name="margin_top">4</property>
     <property name="margin_bottom">4</property>
-    <property name="border_width">1</property>
     <signal name="button-press-event" handler="playlist_track_selected" swapped="no"/>
     <signal name="notify::selected" handler="_on_selection_changed" swapped="no"/>
     <child>

@@ -46,6 +46,7 @@ class Player(GObject.GObject):
         self.emit("player_state_change_signal", self.state.value)
         self.player.set_state(Gst.State.PLAYING)
         #self.timeout_id =
+        #TODO how is this timer stopped?
         GObject.timeout_add(1000, self.player_update_progress)
 
     def player_pause(self):
@@ -92,9 +93,11 @@ class Player(GObject.GObject):
 
     def player_update_progress(self):
         #https://github.com/hadware/gstreamer-python-player/blob/master/seek.py
-        if not self.state == Player_State.PLAYING:
-            #gobject.source_remove(self.timeout_id)
+        success, state, pending = self.player.get_state(Gst.CLOCK_TIME_NONE)
+        #print('player state:', state)
+        if state == Gst.State.NULL:
             print('Timer Stopped')
+            self.player_get_next_track()
             return False
         else:
             success, track_duration = self.player.query_duration(Gst.Format.TIME)
@@ -117,6 +120,7 @@ class Player(GObject.GObject):
 
     def player_get_next_track(self):
         self.player_stop()
+        #TODO: indexing isnt correct
         if len(self.playlist) > 0:
             if self.current_playlist_position < len(self.playlist):
                 self.current_playlist_position = self.current_playlist_position + 1
