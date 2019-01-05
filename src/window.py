@@ -191,10 +191,12 @@ class MoosicWindow(Gtk.ApplicationWindow):
         pass
 
     def playbar_widget_slider_update(self, sender, progress):
-        print('Track Progress:', progress)
+        mins, seconds = divmod(progress, 60)
+        formatted_progress = str(round(mins)) + ':' + str(round(seconds)).zfill(2)
+        print('Track Progress:', formatted_progress)
         self.playwidget_slider.set_range(0, self.player.player_get_track_duration())
         self.playwidget_slider.handler_block(self.playwidget_slider_handler_id)
         self.playwidget_slider.set_value(progress)
-        self.play_widget_progress_duration.set_text(str(progress))
+        self.play_widget_progress_duration.set_text(formatted_progress)
         self.playwidget_slider.handler_unblock(self.playwidget_slider_handler_id)
         
