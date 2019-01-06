@@ -29,6 +29,10 @@ from .player import *
 
 import os
 
+def list_header_func(row, before, user_data):
+    if before and not row.get_header():
+        row.set_header(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
+
 @GtkTemplate(ui='/org/gnome/Moosic/ui/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'MoosicWindow'
@@ -77,6 +81,9 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.player.connect("player_progress_change_signal", self.playbar_widget_slider_update)
         self.playwidget_slider_handler_id = self.playwidget_slider.connect("value-changed", self.track_seek)
         self.load_library()
+
+        self.playlist_listview.set_header_func(list_header_func, None)
+
 
     def load_library(self):
 
