@@ -11,6 +11,7 @@ class GmusicAPI():
         self.settings = Settings()
         self.api = Mobileclient()
         self.library = None
+        self.station_tracks = None
         self.albums = []
         self.playlists = None
         self.device_id = None
@@ -144,7 +145,27 @@ class GmusicAPI():
     def get_track_from_id(self, track_id):
         for track in self.library:
             if track.get('id') == track_id:
+                #print('Match:', track_id, track.get('storeId'))
                 return track
+        #TODO Handle the stations tracks better. id vs storeId should be transparent
+        if self.station_tracks:
+            for track in self.station_tracks:
+                if track.get('storeId') == track_id:
+                    return track
+
+    def get_radio_from_track(self, track_id):
+        station_name = 'moosic'
+        station_id = self.api.create_station(station_name, track_id, artist_id=None, album_id=None, genre_id=None, playlist_token=None, curated_station_id=None)
+        print('station_id:', station_id)
+        station_tracks = self.get_station_tracks(station_id)
+        return station_tracks
+
+    def get_station_tracks(self, station_id):
+        #TODO impliment station_id 'IFL' for the “I’m Feeling Lucky” station.
+        #station_id = 'IFL'
+        self.station_tracks = self.api.get_station_tracks(station_id, num_tracks=20, recently_played_ids=None)
+        print('radio station tracks:', len(self.station_tracks))
+        return self.station_tracks
 
 
 '''
@@ -174,3 +195,5 @@ class GmusicAPI():
     def remove_entries_from_playlist(self):
     def reorder_playlist_entry(self):
 '''
+
+

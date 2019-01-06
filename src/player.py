@@ -63,7 +63,7 @@ class Player(GObject.GObject):
         self.playlist = []
         self.current_playlist_position = -1
 
-    def player_add_to_playlist(self, sender, track_ids):
+    def player_add_to_playlist(self, widget, track_ids):
         for track_id in track_ids:
             track = self.gmusic.get_track_from_id(track_id)
             self.playlist.append(track)
@@ -115,7 +115,7 @@ class Player(GObject.GObject):
         #playlist_index = playlist_position - 1
         track = self.playlist[playlist_position]
         track_id = track.get('id')
-        #print('Play this track:', track_id)
+        print('Play this track:', track_id)
         #TODO check stream url is valid
         track_url = self.gmusic.get_stream_url(track_id)
         self.player.set_property('uri', track_url)
@@ -130,9 +130,22 @@ class Player(GObject.GObject):
                 self.player_load_track(self.current_playlist_position)
 
     def player_play_single_track(self, sender, track_id):
-        track = self.gmusic.get_track_from_id(track_id)
+        #track = self.gmusic.get_track_from_id(track_id)
+        #print('play:', track.get('title'))
         self.player_clear_playlist()
-        self.player_add_to_playlist([track])
+        self.player_add_to_playlist(None, [track_id])
+        self.player_get_next_track()
+
+    def player_play_radio_station(self, sender, track_id):
+        station_tracks = self.gmusic.get_radio_from_track(track_id)
+        self.player_clear_playlist()
+
+        track_ids = []
+        for track in station_tracks:
+            print('player_radio_station_track:', track.get('storeId'))
+            track_ids.append(track.get('storeId'))
+
+        self.player_add_to_playlist(None, track_ids)
         self.player_get_next_track()
 
     def player_get_track_duration(self):

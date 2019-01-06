@@ -10,7 +10,8 @@ class PlaylistRow(Gtk.EventBox):
     __gtype_name__ = 'playlist_listbox_row'
 
     __gsignals__ = {'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
-                    'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,))}
+                    'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                    'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
 
     list_box_row_track = Gtk.Template.Child()
     list_box_row_artist = Gtk.Template.Child()
@@ -51,11 +52,12 @@ class PlaylistRow(Gtk.EventBox):
     def start_radio_clicked(self, sender, child):
         print('start radio:', self.track.get('title'))
         self.playlist_listbox_row_popover.popdown()
+        self.emit("play_station_signal", [self.track.get('id')])
 
 
     @GtkTemplate.Callback
     def playlist_track_selected(self, sender, child):
-        #print('Playlist Track Clicked:', self.track)
+        print('Playlist Track Clicked:', self.track)
         self.emit("play_track_signal", self.track.get('id'))
 
     @GtkTemplate.Callback

@@ -49,12 +49,16 @@ class MoosicWindow(Gtk.ApplicationWindow):
     stack_switcher = GtkTemplate.Child()
     back_button = GtkTemplate.Child()
 
-    #current playlist page
+    #album tracklist page
+    #TODO rename widgets to album track list
     playlist_album_art = GtkTemplate.Child()
     playlist_album_title = GtkTemplate.Child()
     playlist_artist = GtkTemplate.Child()
     playlist_listview = GtkTemplate.Child()
     #current_playlist_store = Gtk.ListStore(int, str, str, str)
+
+    #current playlist
+    current_playlist_listview = GtkTemplate.Child()
 
     #playbar
     play_widget_revealer = GtkTemplate.Child()
@@ -153,6 +157,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
             play_list_track = PlaylistRow(track)
             play_list_track.connect("play_track_signal", self.player.player_play_single_track)
             play_list_track.connect("add_to_queue_signal", self.player.player_add_to_playlist)
+            play_list_track.connect("play_station_signal", self.player.player_play_radio_station)
             self.playlist_listview.add(play_list_track)
 
     def handle_player_states(self, sender, state):
@@ -203,6 +208,28 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
     def player_paused_state(self):
          self.play_pause_btn_image.set_from_icon_name('media-playback-start-symbolic', Gtk.IconSize.BUTTON)
+
+    @GtkTemplate.Callback
+    def play_widget_show_playlist(self, sender):
+        self.stack_switcher.set_visible(False)
+        self.back_button.set_visible(True)
+        #TODO rename the stack pages to something more meaningful
+        self.populate_current_playlist()
+        self.main_stack.set_visible_child_name('main_stack_page_3')
+
+    def populate_current_playlist(self):
+        for track in self.current_playlist_listview.get_children():
+            self.current_playlist_listview.remove(track)
+
+        tracks = self.player.player_get_playlist()
+
+        for track in tracks:
+            play_list_track = PlaylistRow(track)
+            play_list_track.connect("play_track_signal", self.player.player_play_single_track)
+            play_list_track.connect("add_to_queue_signal", self.player.player_add_to_playlist)
+            play_list_track.connect("play_station_signal", self.player.player_play_radio_station)
+            self.current_playlist_listview.add(play_list_track)
+
 
 
     def playbar_widget_slider_update(self, sender, progress):
