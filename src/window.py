@@ -29,6 +29,7 @@ from .player import *
 
 import os
 
+#TODO Move to a helper module
 def list_header_func(row, before, user_data):
     if before and not row.get_header():
         row.set_header(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL))
@@ -150,14 +151,9 @@ class MoosicWindow(Gtk.ApplicationWindow):
         #TODO sort tracks by album order
         for track in tracks:
             play_list_track = PlaylistRow(track)
-            play_list_track.connect("play_track_signal", self.play_track)
+            play_list_track.connect("play_track_signal", self.player.player_play_single_track)
+            play_list_track.connect("add_to_queue_signal", self.player.player_add_to_playlist)
             self.playlist_listview.add(play_list_track)
-
-    def play_track(self, sender, track_id):
-        track = self.gmusic.get_track_from_id(track_id)
-        self.player.player_clear_playlist()
-        self.player.player_add_to_playlist([track])
-        self.player.player_get_next_track()
 
     def handle_player_states(self, sender, state):
 

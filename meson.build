@@ -10,6 +10,8 @@ subdir('po')
 
 meson.add_install_script('build-aux/meson/postinstall.py')
 
+#TODO Are all these gstreamer plugins needed?
+
 dependency('dbus-1')
 dependency('libhandy-0.0', version: '>= 0.0.6')
 dependency('gstreamer-1.0', version: '>= 1.12')

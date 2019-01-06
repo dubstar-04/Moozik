@@ -114,7 +114,7 @@ class GmusicAPI():
         album_title = self.slugify(album_title)
         return self.art_cache() + '/' + album_title + '.jpg'
 
-    #TODO Move to a support class
+    #TODO Move to a helper module
     def slugify(self, s):
         valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
         filename = ''.join(c for c in s if c in valid_chars)

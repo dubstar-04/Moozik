@@ -63,9 +63,12 @@ class Player(GObject.GObject):
         self.playlist = []
         self.current_playlist_position = -1
 
-    def player_add_to_playlist(self, playlist):
-        for track in playlist:
+    def player_add_to_playlist(self, sender, track_ids):
+        for track_id in track_ids:
+            track = self.gmusic.get_track_from_id(track_id)
             self.playlist.append(track)
+
+        print('playlist updated:', self.playlist)
 
     def player_get_playlist(self):
         return self.playlist
@@ -126,6 +129,11 @@ class Player(GObject.GObject):
                 self.current_playlist_position = self.current_playlist_position + 1
                 self.player_load_track(self.current_playlist_position)
 
+    def player_play_single_track(self, sender, track_id):
+        track = self.gmusic.get_track_from_id(track_id)
+        self.player_clear_playlist()
+        self.player_add_to_playlist([track])
+        self.player_get_next_track()
 
     def player_get_track_duration(self):
         return self.duration
