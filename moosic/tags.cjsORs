@@ -1,0 +1,98 @@
+Player_State	player.py	/^class Player_State(Enum):$/;"	c
+STOPPED	player.py	/^    STOPPED = 1$/;"	v	class:Player_State
+PLAYING	player.py	/^    PLAYING = 2$/;"	v	class:Player_State
+PAUSED	player.py	/^    PAUSED = 3$/;"	v	class:Player_State
+Player	player.py	/^class Player():$/;"	c
+__init__	player.py	/^    def __init__(self):$/;"	m	class:Player
+player_play	player.py	/^    def player_play(playlist):$/;"	m	class:Player
+player_pause	player.py	/^    def player_pause():$/;"	m	class:Player
+player_stop	player.py	/^    def player_stop():$/;"	m	class:Player
+add_to_playlist	player.py	/^    def add_to_playlist(self, playlist):$/;"	m	class:Player
+get_playlist	player.py	/^    def get_playlist(self):$/;"	m	class:Player
+Application	main.py	/^class Application(Gtk.Application):$/;"	c
+__init__	main.py	/^    def __init__(self):$/;"	m	class:Application
+do_activate	main.py	/^    def do_activate(self):$/;"	m	class:Application
+main	main.py	/^def main(version):$/;"	f
+__all__	gi_composites.py	/^__all__ = ['GtkTemplate']$/;"	v
+GtkTemplateWarning	gi_composites.py	/^class GtkTemplateWarning(UserWarning):$/;"	c
+_connect_func	gi_composites.py	/^def _connect_func(builder, obj, signal_name, handler_name,$/;"	f
+_register_template	gi_composites.py	/^def _register_template(cls, template_bytes):$/;"	f
+_init_template	gi_composites.py	/^def _init_template(self, cls, base_init_template):$/;"	f
+_Child	gi_composites.py	/^class _Child(object):$/;"	c
+__slots__	gi_composites.py	/^    __slots__ = []$/;"	v	class:_Child	file:
+widgets	gi_composites.py	/^    def widgets(count):$/;"	m	class:_Child
+_GtkTemplate	gi_composites.py	/^class _GtkTemplate(object):$/;"	c
+__ui_path__	gi_composites.py	/^    __ui_path__ = None$/;"	v	class:_GtkTemplate	file:
+Callback	gi_composites.py	/^    def Callback(f):$/;"	m	class:_GtkTemplate
+Child	gi_composites.py	/^    Child = _Child$/;"	v	class:_GtkTemplate
+set_ui_path	gi_composites.py	/^    def set_ui_path(*path):$/;"	m	class:_GtkTemplate
+__init__	gi_composites.py	/^    def __init__(self, ui):$/;"	m	class:_GtkTemplate
+__call__	gi_composites.py	/^    def __call__(self, cls):$/;"	m	class:_GtkTemplate
+GtkTemplate	gi_composites.py	/^GtkTemplate = _GtkTemplate$/;"	v
+PlaylistRow	playlist_listbox_row.py	/^class PlaylistRow(Gtk.EventBox):$/;"	c
+__gtype_name__	playlist_listbox_row.py	/^    __gtype_name__ = 'playlist_listbox_row'$/;"	v	class:PlaylistRow	file:
+__gsignals__	playlist_listbox_row.py	/^    __gsignals__ = {'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject./;"	v	class:PlaylistRow	file:
+list_box_row_track	playlist_listbox_row.py	/^    list_box_row_track = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+list_box_row_artist	playlist_listbox_row.py	/^    list_box_row_artist = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_view_more_button	playlist_listbox_row.py	/^    playlist_view_more_button = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_listbox_row_popover	playlist_listbox_row.py	/^    playlist_listbox_row_popover = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+__init__	playlist_listbox_row.py	/^    def __init__(self, track):$/;"	m	class:PlaylistRow
+playlist_track_selected	playlist_listbox_row.py	/^    def playlist_track_selected(self, sender, child):$/;"	m	class:PlaylistRow
+playlist_view_more_button_clicked	playlist_listbox_row.py	/^    def playlist_view_more_button_clicked(self, sender):$/;"	m	class:PlaylistRow
+load_data	playlist_listbox_row.py	/^    def load_data(self):$/;"	m	class:PlaylistRow
+GmusicAPI	gmusicapi.py	/^class GmusicAPI():$/;"	c
+__init__	gmusicapi.py	/^    def __init__(self):$/;"	m	class:GmusicAPI
+logged_in	gmusicapi.py	/^    def logged_in(self):$/;"	m	class:GmusicAPI
+get_device_id	gmusicapi.py	/^    def get_device_id(self):$/;"	m	class:GmusicAPI
+load_library	gmusicapi.py	/^    def load_library(self):$/;"	m	class:GmusicAPI
+load_albums	gmusicapi.py	/^    def load_albums(self):$/;"	m	class:GmusicAPI
+load_album_art	gmusicapi.py	/^    def load_album_art(self):$/;"	m	class:GmusicAPI
+load_playlists	gmusicapi.py	/^    def load_playlists(self):$/;"	m	class:GmusicAPI
+get_library	gmusicapi.py	/^    def get_library(self):$/;"	m	class:GmusicAPI
+get_albums	gmusicapi.py	/^    def get_albums(self):$/;"	m	class:GmusicAPI
+art_cache	gmusicapi.py	/^    def art_cache(self):$/;"	m	class:GmusicAPI
+get_album_art_name	gmusicapi.py	/^    def get_album_art_name(self, album_title):$/;"	m	class:GmusicAPI
+slugify	gmusicapi.py	/^    def slugify(self, s):$/;"	m	class:GmusicAPI
+get_album	gmusicapi.py	/^    def get_album(self, album_index):$/;"	m	class:GmusicAPI
+get_album_tracks	gmusicapi.py	/^    def get_album_tracks(self, album_index):$/;"	m	class:GmusicAPI
+get_stream_url	gmusicapi.py	/^    def get_stream_url(self, track_id):$/;"	m	class:GmusicAPI
+Settings	settings.py	/^class Settings:$/;"	c
+__init__	settings.py	/^    def __init__(self):$/;"	m	class:Settings
+set_username	settings.py	/^    def set_username(self, username):$/;"	m	class:Settings
+get_username	settings.py	/^    def get_username(self):$/;"	m	class:Settings
+set_password	settings.py	/^    def set_password(self, password):$/;"	m	class:Settings
+get_password	settings.py	/^    def get_password(self):$/;"	m	class:Settings
+network_available	settings.py	/^    def network_available(self):$/;"	m	class:Settings
+get_settings_obj	settings.py	/^    def get_settings_obj(self):$/;"	m	class:Settings
+AlbumWidget	albumWidget.py	/^class AlbumWidget(Gtk.EventBox):$/;"	c
+__gtype_name__	albumWidget.py	/^    __gtype_name__ = 'albumWidget'$/;"	v	class:AlbumWidget	file:
+__gsignals__	albumWidget.py	/^    __gsignals__ = { }$/;"	v	class:AlbumWidget	file:
+AlbumArt_Image	albumWidget.py	/^    AlbumArt_Image = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+AlbumTitle_Label	albumWidget.py	/^    AlbumTitle_Label = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+Artist_Label	albumWidget.py	/^    Artist_Label = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+__init__	albumWidget.py	/^    def __init__(self, album):$/;"	m	class:AlbumWidget
+load_data	albumWidget.py	/^    def load_data(self):$/;"	m	class:AlbumWidget
+get_album_title	albumWidget.py	/^    def get_album_title():$/;"	m	class:AlbumWidget
+album_selected	albumWidget.py	/^    def album_selected(self, caller):$/;"	m	class:AlbumWidget
+MoosicWindow	window.py	/^class MoosicWindow(Gtk.ApplicationWindow):$/;"	c
+__gtype_name__	window.py	/^    __gtype_name__ = 'MoosicWindow'$/;"	v	class:MoosicWindow	file:
+username_entry	window.py	/^    username_entry = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+password_entry	window.py	/^    password_entry = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+album_flowbox	window.py	/^    album_flowbox = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+playlist_flowbox	window.py	/^    playlist_flowbox = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+window_stack	window.py	/^    window_stack = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+main_stack	window.py	/^    main_stack = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+stack_switcher	window.py	/^    stack_switcher = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+back_button	window.py	/^    back_button = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+playlist_album_art	window.py	/^    playlist_album_art = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+playlist_album_title	window.py	/^    playlist_album_title = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+playlist_artist	window.py	/^    playlist_artist = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+playlist_listview	window.py	/^    playlist_listview = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+play_widget_revealer	window.py	/^    play_widget_revealer = GtkTemplate.Child()$/;"	v	class:MoosicWindow
+__init__	window.py	/^    def __init__(self, **kwargs):$/;"	m	class:MoosicWindow
+load_library	window.py	/^    def load_library(self):$/;"	m	class:MoosicWindow
+back_button_pressed	window.py	/^    def back_button_pressed(self, sender):$/;"	m	class:MoosicWindow
+username_changed	window.py	/^    def username_changed(self, sender):$/;"	m	class:MoosicWindow
+password_changed	window.py	/^    def password_changed(self, sender):$/;"	m	class:MoosicWindow
+album_selected	window.py	/^    def album_selected(self, sender, child):$/;"	m	class:MoosicWindow
+play_track	window.py	/^    def play_track(self, sender, track_id):$/;"	m	class:MoosicWindow

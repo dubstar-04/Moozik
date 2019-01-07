@@ -5,7 +5,7 @@ project('moosic',         version: '0.1.0',
 i18n = import('i18n')
 
 subdir('data')
-subdir('src')
+subdir('moosic')
 subdir('po')
 
 meson.add_install_script('build-aux/meson/postinstall.py')

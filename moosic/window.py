@@ -22,8 +22,8 @@ from gi.repository import Gtk
 from .gi_composites import GtkTemplate
 
 from .settings import *
-from .gmusicapi import * 
-from ./widgets import AlbumWidget
+from .gmusicapi import *
+from .albumWidget import *
 from .playlist_listbox_row import *
 from .player import *
 
@@ -76,11 +76,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
-        
+
         self.settings = Settings()
         self.settings.get_settings_obj().bind('username', self.username_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
         self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
-        
+
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
         self.player.connect("player_state_change_signal", self.handle_player_states)
@@ -124,7 +124,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         username =  self.username_entry.get_text()
         print('username changed:', username)
         #self.settings.set_username(username)
-        
+
     @GtkTemplate.Callback
     def password_changed(self, sender):
         password =  self.password_entry.get_text()

@@ -37,5 +37,6 @@ moosic_sources = [
   'player.py'
 ]
 
-#install_data(moosic_sources, install_dir: moduledir)
-install_subdir('src', install_dir: moduledir )
+install_data(moosic_sources, install_dir: moduledir)
+#install_subdir('moosic', install_dir: moduledir )
+#install_subdir('moosic/widgets', install_dir: moduledir )
