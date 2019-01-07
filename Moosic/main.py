@@ -1,6 +1,4 @@
-#!@PYTHON@
-
-# moosic.in
+# main.py
 #
 # Copyright 2018 Dubstar_04
 #
@@ -17,25 +15,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
-import signal
-import gettext
+import gi
 
-VERSION = '@VERSION@'
-pkgdatadir = '@pkgdatadir@'
-localedir = '@localedir@'
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gio
 
-sys.path.insert(1, pkgdatadir)
-signal.signal(signal.SIGINT, signal.SIG_DFL)
-gettext.install('moosic', localedir)
+from .window import MoosicWindow
 
-if __name__ == '__main__':
-    import gi
 
-    from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'moosic.gresource'))
-    resource._register()
+class Application(Gtk.Application):
+    def __init__(self):
+        super().__init__(application_id='org.gnome.Moosic',
+                         flags=Gio.ApplicationFlags.FLAGS_NONE)
 
-    from moosic import main
-    sys.exit(main.main(VERSION))
+    def do_activate(self):
+        win = self.props.active_window
+        if not win:
+            win = MoosicWindow(application=self)
+        win.present()
+
+
+def main(version):
+    app = Application()
+    return app.run(sys.argv)

@@ -15,19 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
+import gi, os
 from gi.repository import Gtk
-#gi.require_version('Handy', '0.0')
-#from gi.repository import Handy
-from .gi_composites import GtkTemplate
+from gi.repository.GdkPixbuf import Pixbuf
 
-from .settings import *
-from .gmusicapi import * 
-from ./widgets import AlbumWidget
-from .playlist_listbox_row import *
+from .gmusicapi import *
 from .player import *
+from .settings import *
 
-import os
+from .widgets import AlbumWidget, PlaylistRow, GtkTemplate
 
 #TODO Move to a helper module
 def list_header_func(row, before, user_data):
@@ -76,11 +72,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.init_template()
-        
+
         self.settings = Settings()
         self.settings.get_settings_obj().bind('username', self.username_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
         self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
-        
+
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
         self.player.connect("player_state_change_signal", self.handle_player_states)
@@ -124,7 +120,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         username =  self.username_entry.get_text()
         print('username changed:', username)
         #self.settings.set_username(username)
-        
+
     @GtkTemplate.Callback
     def password_changed(self, sender):
         password =  self.password_entry.get_text()

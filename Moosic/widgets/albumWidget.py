@@ -1,3 +1,5 @@
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from .gi_composites import GtkTemplate
 from gi.repository.GdkPixbuf import Pixbuf
@@ -13,7 +15,7 @@ class AlbumWidget(Gtk.EventBox):
     AlbumArt_Image = Gtk.Template.Child()
     AlbumTitle_Label = Gtk.Template.Child()
     Artist_Label = Gtk.Template.Child()
-    
+
     def __init__(self, album):
         super().__init__()
 

@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+# moosic.py.in
+#
+# Copyright 2018 Dubstar_04
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import gettext
+import locale
+import sys
+from os import path
+
+sys.path.insert(1, '@PYTHON_DIR@')
+sys.path.append(path.join("@LIBDIR@", 'moosic/python'))
+
+import gi, os
+from gi.repository import Gio
+#from gi import require_version
+#require_version("GES", "1.0")
+#from gi.repository import Gio, GES, Gst
+
+if __name__ == "__main__":
+
+    locale.bindtextdomain('org.gnome.Moosic', '@LOCALE_DIR@')
+    locale.textdomain('org.gnome.Moosic')
+    gettext.bindtextdomain('org.gnome.Moosic', '@LOCALE_DIR@')
+    gettext.textdomain('org.gnome.Moosic')
+
+    #sys.path.insert(1, pkgdatadir)
+    #signal.signal(signal.SIGINT, signal.SIG_DFL)
+    #gettext.install('moosic', '@LOCALE_DIR@')
+
+
+    #resource = Gio.resource_load(path.join('@DATA_DIR@','@PROJECT_NAME@.gresource'))
+    resource = Gio.Resource.load(os.path.join('@DATA_DIR@', '@PROJECT_NAME@.gresource'))
+    Gio.Resource._register(resource)
+
+
+    #Gst.init(sys.argv)
+    #res, sys.argv = GES.init_check(sys.argv)
+    '''
+    from AudioCutter.application import Application
+    try:
+        app = Application()
+        exit_status = app.run(sys.argv)
+        sys.exit(exit_status)
+    except KeyboardInterrupt:
+        exit()
+
+    if __name__ == '__main__':
+    import gi
+
+    from gi.repository import Gio
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'moosic.gresource'))
+    resource._register()
+    '''
+
+    from Moosic import main
+    sys.exit(main.main('@VERSION@'))
+
+
+
