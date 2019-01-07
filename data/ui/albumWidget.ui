@@ -7,6 +7,8 @@
     <property name="height_request">200</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
+    <property name="visible_window">False</property>
+    <property name="above_child">True</property>
     <signal name="button-press-event" handler="album_selected" swapped="no"/>
     <signal name="notify::selected" handler="_on_selection_changed" swapped="no"/>
     <child>

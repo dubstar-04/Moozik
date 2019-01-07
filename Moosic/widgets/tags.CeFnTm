@@ -1,0 +1,46 @@
+PlaylistRow	playlist_listbox_row.py	/^class PlaylistRow(Gtk.EventBox):$/;"	c
+__gtype_name__	playlist_listbox_row.py	/^    __gtype_name__ = 'playlist_listbox_row'$/;"	v	class:PlaylistRow	file:
+__gsignals__	playlist_listbox_row.py	/^    __gsignals__ = {'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject./;"	v	class:PlaylistRow	file:
+list_box_row_track	playlist_listbox_row.py	/^    list_box_row_track = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+list_box_row_artist	playlist_listbox_row.py	/^    list_box_row_artist = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_view_more_button	playlist_listbox_row.py	/^    playlist_view_more_button = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_listbox_row_popover	playlist_listbox_row.py	/^    playlist_listbox_row_popover = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_popover_add_to_queue	playlist_listbox_row.py	/^    playlist_popover_add_to_queue = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_popover_add_to_playlist	playlist_listbox_row.py	/^    playlist_popover_add_to_playlist = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+playlist_popover_start_radio	playlist_listbox_row.py	/^    playlist_popover_start_radio = Gtk.Template.Child()$/;"	v	class:PlaylistRow
+__init__	playlist_listbox_row.py	/^    def __init__(self, track):$/;"	m	class:PlaylistRow
+add_to_queue_clicked	playlist_listbox_row.py	/^    def add_to_queue_clicked(self, sender, child):$/;"	m	class:PlaylistRow
+add_to_playlist_clicked	playlist_listbox_row.py	/^    def add_to_playlist_clicked(self, sender, child):$/;"	m	class:PlaylistRow
+start_radio_clicked	playlist_listbox_row.py	/^    def start_radio_clicked(self, sender, child):$/;"	m	class:PlaylistRow
+playlist_track_selected	playlist_listbox_row.py	/^    def playlist_track_selected(self, sender, child):$/;"	m	class:PlaylistRow
+playlist_view_more_button_clicked	playlist_listbox_row.py	/^    def playlist_view_more_button_clicked(self, sender):$/;"	m	class:PlaylistRow
+load_data	playlist_listbox_row.py	/^    def load_data(self):$/;"	m	class:PlaylistRow
+AlbumPlaylistPage	album_playlist_page.py	/^class AlbumPlaylistPage(Gtk.ScrolledWindow):$/;"	c
+__gtype_name__	album_playlist_page.py	/^    __gtype_name__ = 'album_playlist_page'$/;"	v	class:AlbumPlaylistPage	file:
+__gsignals__	album_playlist_page.py	/^    __gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObj/;"	v	class:AlbumPlaylistPage	file:
+album_flowbox	album_playlist_page.py	/^    album_flowbox = Gtk.Template.Child()$/;"	v	class:AlbumPlaylistPage
+__init__	album_playlist_page.py	/^    def __init__(self, albums):$/;"	m	class:AlbumPlaylistPage
+populate_album_view	album_playlist_page.py	/^    def populate_album_view(self):$/;"	m	class:AlbumPlaylistPage
+album_selected	album_playlist_page.py	/^    def album_selected(self, sender, child):$/;"	m	class:AlbumPlaylistPage
+AlbumWidget	albumWidget.py	/^class AlbumWidget(Gtk.EventBox):$/;"	c
+__gtype_name__	albumWidget.py	/^    __gtype_name__ = 'albumWidget'$/;"	v	class:AlbumWidget	file:
+AlbumArt_Image	albumWidget.py	/^    AlbumArt_Image = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+AlbumTitle_Label	albumWidget.py	/^    AlbumTitle_Label = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+Artist_Label	albumWidget.py	/^    Artist_Label = Gtk.Template.Child()$/;"	v	class:AlbumWidget
+__init__	albumWidget.py	/^    def __init__(self, album):$/;"	m	class:AlbumWidget
+load_data	albumWidget.py	/^    def load_data(self):$/;"	m	class:AlbumWidget
+get_album_title	albumWidget.py	/^    def get_album_title():$/;"	m	class:AlbumWidget
+album_selected	albumWidget.py	/^    def album_selected(self, sender, child):$/;"	m	class:AlbumWidget
+NowPlayingPage	now_playing_page.py	/^class NowPlayingPage(Gtk.EventBox):$/;"	c
+__gtype_name__	now_playing_page.py	/^    __gtype_name__ = 'now_playing_page'$/;"	v	class:NowPlayingPage	file:
+current_playlist_listview	now_playing_page.py	/^    current_playlist_listview = Gtk.Template.Child()$/;"	v	class:NowPlayingPage
+__init__	now_playing_page.py	/^    def __init__(self, player):$/;"	m	class:NowPlayingPage
+load_current_playlist	now_playing_page.py	/^    def load_current_playlist(self):$/;"	m	class:NowPlayingPage
+TrackListPage	track_list_page.py	/^class TrackListPage(Gtk.ScrolledWindow):$/;"	c
+__gtype_name__	track_list_page.py	/^    __gtype_name__ = 'track_list_page'$/;"	v	class:TrackListPage	file:
+playlist_album_art	track_list_page.py	/^    playlist_album_art = Gtk.Template.Child()$/;"	v	class:TrackListPage
+playlist_album_title	track_list_page.py	/^    playlist_album_title = Gtk.Template.Child()$/;"	v	class:TrackListPage
+playlist_artist	track_list_page.py	/^    playlist_artist = Gtk.Template.Child()$/;"	v	class:TrackListPage
+playlist_listview	track_list_page.py	/^    playlist_listview = Gtk.Template.Child()$/;"	v	class:TrackListPage
+__init__	track_list_page.py	/^    def __init__(self, gmusic):$/;"	m	class:TrackListPage
+populate_listview	track_list_page.py	/^    def populate_listview(self, sender, index):$/;"	m	class:TrackListPage

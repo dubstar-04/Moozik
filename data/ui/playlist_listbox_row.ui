@@ -112,6 +112,7 @@
                 <property name="can_focus">False</property>
                 <property name="visible_window">False</property>
                 <property name="above_child">True</property>
+                <signal name="button-press-event" handler="add_to_queue_clicked" swapped="no"/>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -147,6 +148,7 @@
                 <property name="can_focus">False</property>
                 <property name="visible_window">False</property>
                 <property name="above_child">True</property>
+                <signal name="button-press-event" handler="add_to_playlist_clicked" swapped="no"/>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -182,6 +184,7 @@
                 <property name="can_focus">False</property>
                 <property name="visible_window">False</property>
                 <property name="above_child">True</property>
+                <signal name="button-press-event" handler="start_radio_clicked" swapped="no"/>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>

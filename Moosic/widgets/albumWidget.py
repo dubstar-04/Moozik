@@ -1,7 +1,6 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from .gi_composites import GtkTemplate
 from gi.repository.GdkPixbuf import Pixbuf
 import os
 
@@ -10,7 +9,7 @@ class AlbumWidget(Gtk.EventBox):
 
     __gtype_name__ = 'albumWidget'
 
-    __gsignals__ = { }
+    #__gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)) }
 
     AlbumArt_Image = Gtk.Template.Child()
     AlbumTitle_Label = Gtk.Template.Child()
@@ -38,6 +37,7 @@ class AlbumWidget(Gtk.EventBox):
     def get_album_title():
         return self.album.get('title')
 
-    @GtkTemplate.Callback
-    def album_selected(self, caller):
-        print('album pressed')
+    @Gtk.Template.Callback()
+    def album_selected(self, sender, child):
+        print('album_widget_pressed:')
+        #self.emit("album_selected_signal", [self.track.get('id')])

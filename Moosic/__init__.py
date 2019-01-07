@@ -1,1 +1,1 @@
-from .widgets import TestWidget, AlbumWidget, GtkTemplate
+from .widgets import AlbumWidget, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget

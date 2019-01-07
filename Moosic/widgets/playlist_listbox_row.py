@@ -1,6 +1,5 @@
 import gi
 from gi.repository import Gtk, GObject
-from .gi_composites import GtkTemplate
 from gi.repository.GdkPixbuf import Pixbuf
 #import os
 
@@ -26,41 +25,35 @@ class PlaylistRow(Gtk.EventBox):
 
     def __init__(self, track):
         super().__init__()
-        #self.init_template()
-        #super().__init__()
-        #self.init_template()
+
         self.track = track
         self.load_data()
 
-        self.connect("button-press-event", self.playlist_track_selected)
-        self.playlist_view_more_button.connect("clicked", self.playlist_view_more_button_clicked)
-
-        self.playlist_popover_add_to_queue.connect("button-press-event", self.add_to_queue_clicked)
-        self.playlist_popover_add_to_playlist.connect("button-press-event", self.add_to_playlist_clicked)
-        self.playlist_popover_start_radio.connect("button-press-event", self.start_radio_clicked)
-
+    @Gtk.Template.Callback()
     def add_to_queue_clicked(self, sender, child):
         print(sender, child)
         print('Add to Queue clicked:', self.track.get('title'))
         self.playlist_listbox_row_popover.popdown()
         self.emit("add_to_queue_signal", [self.track.get('id')])
 
+    @Gtk.Template.Callback()
     def add_to_playlist_clicked(self, sender, child):
         print('Add to playlist:', self.track.get('title'))
         #self.playlist_listbox_row_popover.popdown()
 
+    @Gtk.Template.Callback
     def start_radio_clicked(self, sender, child):
         print('start radio:', self.track.get('title'))
         self.playlist_listbox_row_popover.popdown()
         self.emit("play_station_signal", [self.track.get('id')])
 
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback()
     def playlist_track_selected(self, sender, child):
         print('Playlist Track Clicked:', self.track)
         self.emit("play_track_signal", self.track.get('id'))
 
-    @GtkTemplate.Callback
+    @Gtk.Template.Callback()
     def playlist_view_more_button_clicked(self, sender):
         print("Playlist More Button Clicked")
         #self.playlist_listbox_row_popover.show_all()

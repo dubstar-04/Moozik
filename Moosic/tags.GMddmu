@@ -1,0 +1,88 @@
+GmusicAPI	gmusicapi.py	/^class GmusicAPI():$/;"	c
+__init__	gmusicapi.py	/^    def __init__(self):$/;"	m	class:GmusicAPI
+logged_in	gmusicapi.py	/^    def logged_in(self):$/;"	m	class:GmusicAPI
+get_device_id	gmusicapi.py	/^    def get_device_id(self):$/;"	m	class:GmusicAPI
+load_library	gmusicapi.py	/^    def load_library(self):$/;"	m	class:GmusicAPI
+load_albums	gmusicapi.py	/^    def load_albums(self):$/;"	m	class:GmusicAPI
+load_album_art	gmusicapi.py	/^    def load_album_art(self):$/;"	m	class:GmusicAPI
+load_playlists	gmusicapi.py	/^    def load_playlists(self):$/;"	m	class:GmusicAPI
+get_library	gmusicapi.py	/^    def get_library(self):$/;"	m	class:GmusicAPI
+get_albums	gmusicapi.py	/^    def get_albums(self):$/;"	m	class:GmusicAPI
+art_cache	gmusicapi.py	/^    def art_cache(self):$/;"	m	class:GmusicAPI
+get_album_art_name	gmusicapi.py	/^    def get_album_art_name(self, album_title):$/;"	m	class:GmusicAPI
+slugify	gmusicapi.py	/^    def slugify(self, s):$/;"	m	class:GmusicAPI
+get_album	gmusicapi.py	/^    def get_album(self, album_index):$/;"	m	class:GmusicAPI
+get_album_tracks	gmusicapi.py	/^    def get_album_tracks(self, album_index):$/;"	m	class:GmusicAPI
+get_stream_url	gmusicapi.py	/^    def get_stream_url(self, track_id):$/;"	m	class:GmusicAPI
+get_track_from_id	gmusicapi.py	/^    def get_track_from_id(self, track_id):$/;"	m	class:GmusicAPI
+get_radio_from_track	gmusicapi.py	/^    def get_radio_from_track(self, track_id):$/;"	m	class:GmusicAPI
+get_station_tracks	gmusicapi.py	/^    def get_station_tracks(self, station_id):$/;"	m	class:GmusicAPI
+Application	main.py	/^class Application(Gtk.Application):$/;"	c
+__init__	main.py	/^    def __init__(self):$/;"	m	class:Application
+do_activate	main.py	/^    def do_activate(self):$/;"	m	class:Application
+main	main.py	/^def main(version):$/;"	f
+Settings	settings.py	/^class Settings:$/;"	c
+__init__	settings.py	/^    def __init__(self):$/;"	m	class:Settings
+set_username	settings.py	/^    def set_username(self, username):$/;"	m	class:Settings
+get_username	settings.py	/^    def get_username(self):$/;"	m	class:Settings
+set_password	settings.py	/^    def set_password(self, password):$/;"	m	class:Settings
+get_password	settings.py	/^    def get_password(self):$/;"	m	class:Settings
+network_available	settings.py	/^    def network_available(self):$/;"	m	class:Settings
+get_settings_obj	settings.py	/^    def get_settings_obj(self):$/;"	m	class:Settings
+Player_State	player.py	/^class Player_State(Enum):$/;"	c
+STOPPED	player.py	/^    STOPPED = 1$/;"	v	class:Player_State
+PLAYING	player.py	/^    PLAYING = 2$/;"	v	class:Player_State
+PAUSED	player.py	/^    PAUSED = 3$/;"	v	class:Player_State
+Player	player.py	/^class Player(GObject.GObject):$/;"	c
+__gsignals__	player.py	/^    __gsignals__ =  {'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE,/;"	v	class:Player	file:
+__init__	player.py	/^    def __init__(self, gmusic):$/;"	m	class:Player
+player_play	player.py	/^    def player_play(self):$/;"	m	class:Player
+player_pause	player.py	/^    def player_pause(self):$/;"	m	class:Player
+player_stop	player.py	/^    def player_stop(self):$/;"	m	class:Player
+player_clear_playlist	player.py	/^    def player_clear_playlist(self):$/;"	m	class:Player
+player_add_to_playlist	player.py	/^    def player_add_to_playlist(self, widget, track_ids):$/;"	m	class:Player
+player_get_playlist	player.py	/^    def player_get_playlist(self):$/;"	m	class:Player
+player_get_playing_track	player.py	/^    def player_get_playing_track(self):$/;"	m	class:Player
+player_on_message	player.py	/^    def player_on_message(self, bus, message):$/;"	m	class:Player
+player_get_state	player.py	/^    def player_get_state(self):$/;"	m	class:Player
+player_seek	player.py	/^    def player_seek(self, seek_position):$/;"	m	class:Player
+player_update_progress	player.py	/^    def player_update_progress(self):$/;"	m	class:Player
+player_load_track	player.py	/^    def player_load_track(self, playlist_position):$/;"	m	class:Player
+player_get_next_track	player.py	/^    def player_get_next_track(self):$/;"	m	class:Player
+player_play_single_track	player.py	/^    def player_play_single_track(self, sender, track_id):$/;"	m	class:Player
+player_play_radio_station	player.py	/^    def player_play_radio_station(self, sender, track_id):$/;"	m	class:Player
+player_get_track_duration	player.py	/^    def player_get_track_duration(self):$/;"	m	class:Player
+player_get_track_progress	player.py	/^    def player_get_track_progress(self):$/;"	m	class:Player
+list_header_func	utils.py	/^def list_header_func(self, row, before, user_data):$/;"	f
+list_header_func	window.py	/^def list_header_func(row, before, user_data):$/;"	f
+MoosicWindow	window.py	/^class MoosicWindow(Gtk.ApplicationWindow):$/;"	c
+__gtype_name__	window.py	/^    __gtype_name__ = 'MoosicWindow'$/;"	v	class:MoosicWindow	file:
+username_entry	window.py	/^    username_entry = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+password_entry	window.py	/^    password_entry = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+main_stack	window.py	/^    main_stack = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+album_playlist_stack	window.py	/^    album_playlist_stack = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+stack_switcher	window.py	/^    stack_switcher = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+back_button	window.py	/^    back_button = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_revealer	window.py	/^    play_widget_revealer = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_track_title	window.py	/^    play_widget_track_title = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+playwidget_artist	window.py	/^    playwidget_artist = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_progress_duration	window.py	/^    play_widget_progress_duration = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+playwidget_slider	window.py	/^    playwidget_slider = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_show_playlist	window.py	/^    play_widget_show_playlist = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_album_art	window.py	/^    play_widget_album_art = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_widget_play_pause_button	window.py	/^    play_widget_play_pause_button = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+play_pause_btn_image	window.py	/^    play_pause_btn_image = Gtk.Template.Child()$/;"	v	class:MoosicWindow
+__init__	window.py	/^    def __init__(self, **kwargs):$/;"	m	class:MoosicWindow
+load_library	window.py	/^    def load_library(self):$/;"	m	class:MoosicWindow
+back_button_pressed	window.py	/^    def back_button_pressed(self, sender):$/;"	m	class:MoosicWindow
+username_changed	window.py	/^    def username_changed(self, sender):$/;"	m	class:MoosicWindow
+password_changed	window.py	/^    def password_changed(self, sender):$/;"	m	class:MoosicWindow
+album_selected	window.py	/^    def album_selected(self, sender, index):$/;"	m	class:MoosicWindow
+handle_player_states	window.py	/^    def handle_player_states(self, sender, state):$/;"	m	class:MoosicWindow
+player_stopped_state	window.py	/^    def player_stopped_state(self):$/;"	m	class:MoosicWindow
+player_playing_state	window.py	/^    def player_playing_state(self):$/;"	m	class:MoosicWindow
+play_pause	window.py	/^    def play_pause(self, widget):$/;"	m	class:MoosicWindow
+track_seek	window.py	/^    def track_seek(self, widget):$/;"	m	class:MoosicWindow
+player_paused_state	window.py	/^    def player_paused_state(self):$/;"	m	class:MoosicWindow
+play_widget_show_playlist	window.py	/^    def play_widget_show_playlist(self, sender):$/;"	m	class:MoosicWindow
+playbar_widget_slider_update	window.py	/^    def playbar_widget_slider_update(self, sender, progress):$/;"	m	class:MoosicWindow

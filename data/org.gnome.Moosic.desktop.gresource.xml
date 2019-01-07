@@ -4,5 +4,9 @@
     <file>ui/window.ui</file>
     <file>ui/albumWidget.ui</file>
     <file>ui/playlist_listbox_row.ui</file>
+    <file>ui/now_playing_page.ui</file>
+    <file>ui/album_playlist_page.ui</file>
+    <file>ui/track_list_page.ui</file>
+    <file>ui/play_bar_widget.ui</file>
   </gresource>
 </gresources>
