@@ -190,7 +190,7 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="icon_size">0</property>
-            <property name="stack">album_playlist_stack</property>
+            <property name="stack">main_stack</property>
           </object>
         </child>
         <child>
@@ -222,18 +222,7 @@
             <property name="can_focus">False</property>
             <property name="transition_type">slide-left-right</property>
             <child>
-              <object class="GtkStack" id="album_playlist_stack">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="transition_type">slide-left-right</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="name">main_stack_home_page</property>
-                <property name="title" translatable="yes">page0</property>
-              </packing>
+              <placeholder/>
             </child>
           </object>
           <packing>

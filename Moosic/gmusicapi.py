@@ -57,6 +57,7 @@ class GmusicAPI():
         print('Album count :', len(self.albums))
         #print(self.library)
 
+    #TODO Move this out of the UI thread
     def load_albums(self):
         for song in self.library:
             album_title = song.get("album")
@@ -77,6 +78,7 @@ class GmusicAPI():
             if not any(album.get('title', None) == album_title for album in self.albums):
                 self.albums.append(album)
 
+    #TODO Impliment some type of lazy loading for the album art
     def load_album_art(self):
         for album in self.albums:
             file_path = album.get('album_art_path')

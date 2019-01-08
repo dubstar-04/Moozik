@@ -34,15 +34,13 @@ class MoosicWindow(Gtk.ApplicationWindow):
     password_entry = Gtk.Template.Child()
 
     main_stack = Gtk.Template.Child()
-    album_playlist_stack = Gtk.Template.Child()
+    #album_playlist_stack = Gtk.Template.Child()
     stack_switcher = Gtk.Template.Child()
     back_button = Gtk.Template.Child()
     play_widget_revealer = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        #self.init_template()
-
 
         self.settings = Settings()
         #TODO move settings to own ui
@@ -53,24 +51,15 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.player = Player(self.gmusic)
         self.load_library()
 
-        #set up page stack
-        #main_stack
-        #|----> album_playlist_stack
-        #|    |----> album_page
-        #|    |----> playlist_page
-        #|
-        #|---->  album_track_page
-        #|---->  playlist_track_page
 
         self.album_page = AlbumPlaylistPage(self.gmusic.get_albums())
         self.playlist_page = AlbumPlaylistPage(self.gmusic.get_albums())
 
-        #add connections
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)
 
-        self.album_playlist_stack.add_titled(self.album_page, 'Albums', 'Albums')
-        self.album_playlist_stack.add_titled(self.playlist_page, 'Playlists', 'Playlists')
+        self.main_stack.add_titled(self.album_page, 'album_page', 'Albums')
+        self.main_stack.add_titled(self.playlist_page, 'playlists_page', 'Playlists')
 
         self.now_playing_page = NowPlayingPage(self.player)
         self.track_list_page = TrackListPage(self.gmusic, self.player)
@@ -82,7 +71,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
 
         self.play_widget_revealer.add(self.play_bar_widget)
-        #self.stack_switcher.set_stack(self.album_playlist_stack)
+
+        self.page_breadcrumbs = []
 
     #TODO move this to init of the gmusic object
     def load_library(self):
@@ -95,17 +85,36 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def back_button_pressed(self, sender):
-        self.stack_switcher.set_visible(True)
-        self.back_button.set_visible(False)
-        #TODO Return to the same place in the stack from where we left
-        self.main_stack.set_visible_child_name('main_stack_home_page')
-        #self.album_playlist_stack.set_visible_child_name('Albums')
+        self.page_pop()
+
+    def page_pop(self):
+        print(self.page_breadcrumbs)
+        if len(self.page_breadcrumbs):
+            self.main_stack.set_visible_child_name(self.page_breadcrumbs[-1])
+            self.page_breadcrumbs.pop(-1)
+            print(self.page_breadcrumbs)
+
+        if not len(self.page_breadcrumbs):
+            self.stack_switcher.set_visible(True)
+            self.back_button.set_visible(False)
 
     def show_now_playing_page(self, sender, data):
+        if self.main_stack.get_visible_child_name() != 'now_playing_page':
+            self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
+            self.stack_switcher.set_visible(False)
+            self.back_button.set_visible(True)
+            self.now_playing_page.load_current_playlist()
+            self.main_stack.set_visible_child_name('now_playing_page')
+        else:
+            self.page_pop()
+
+    @Gtk.Template.Callback()
+    def album_selected(self, sender, index):
+        self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
+        self.track_list_page.populate_listview(index)
+        self.main_stack.set_visible_child_name('track_list_page')
         self.stack_switcher.set_visible(False)
         self.back_button.set_visible(True)
-        self.now_playing_page.load_current_playlist()
-        self.main_stack.set_visible_child_name('now_playing_page')
 
 
     #TODO move settings to its own class
@@ -121,10 +130,5 @@ class MoosicWindow(Gtk.ApplicationWindow):
         print('password changed:', password)
         #self.settings.set_password(password)
 
-    @Gtk.Template.Callback()
-    def album_selected(self, sender, index):
-        self.track_list_page.populate_listview(index)
-        self.main_stack.set_visible_child_name('track_list_page')
-        self.stack_switcher.set_visible(False)
-        self.back_button.set_visible(True)
+
         
