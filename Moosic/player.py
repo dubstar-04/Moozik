@@ -17,7 +17,8 @@ class Player(GObject.GObject):
 
     Gst.init(None)
     __gsignals__ =  {'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
-                     'player_progress_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (float,))}
+                     'player_progress_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (float,)),
+                     'player_playlist_updated_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_BOOLEAN,))}
 
 
     def __init__(self, gmusic):
@@ -69,6 +70,25 @@ class Player(GObject.GObject):
             self.playlist.append(track)
 
         print('playlist updated:', self.playlist)
+
+    def player_remove_from_playlist(self, widget, index):
+        self.playlist.pop(index)
+        self.emit("player_playlist_updated_signal", True)
+
+
+    def player_reorder_playlist(self, sender, indices):
+        source_row = indices[0]
+        destination_row = indices[1]
+        print('Player_reorder_playlist - move row:', source_row  ,'to row:', destination_row)
+
+        if source_row < destination_row:
+            self.playlist.insert(destination_row + 1, self.playlist[source_row])
+            self.playlist.pop(source_row)
+        else:
+            self.playlist.insert(destination_row, self.playlist[source_row])
+            self.playlist.pop(source_row + 1)
+
+        self.emit("player_playlist_updated_signal", True)
 
     def player_get_playlist(self):
         return self.playlist
