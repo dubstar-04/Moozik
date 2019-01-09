@@ -8,7 +8,7 @@ class QueueListboxRow(Gtk.EventBox):
 
     __gtype_name__ = 'queue_listbox_row'
 
-    __gsignals__ = {'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
+    __gsignals__ = {'queue_track_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                     'remove_from_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                     'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
                     'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,))}
@@ -86,8 +86,8 @@ class QueueListboxRow(Gtk.EventBox):
 
     @Gtk.Template.Callback()
     def playlist_track_selected(self, sender, child):
-        print('Playlist Track Clicked:', self.track)
-        self.emit("play_track_signal", self.track.get('id'))
+        print('Queue Track Clicked:', self.track)
+        self.emit("queue_track_selected_signal", self.get_parent().get_index())
 
     @Gtk.Template.Callback()
     def playlist_view_more_clicked(self, sender, child):

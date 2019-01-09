@@ -48,7 +48,7 @@ class NowPlayingPage(Gtk.EventBox):
             #print(track)
             play_list_track = QueueListboxRow(track)
             #TODO player.play_single_track clears the current playlist.
-            play_list_track.connect("play_track_signal", self.player.player_play_single_track)
+            play_list_track.connect("queue_track_selected_signal", self.player.player_play_queue_track)
             #TODO add to queue makes no sense on the current playlist
             play_list_track.connect("remove_from_queue_signal", self.player.player_remove_from_playlist)
             play_list_track.connect("play_station_signal", self.player.player_play_radio_station)

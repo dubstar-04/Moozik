@@ -156,6 +156,12 @@ class Player(GObject.GObject):
         self.player_add_to_playlist(None, [track_id])
         self.player_get_next_track()
 
+    def player_play_queue_track(self, sender, index):
+        print('play queue index:', index)
+        self.player_stop()
+        self.current_playlist_position = index
+        self.player_load_track(index)
+
     def player_play_radio_station(self, sender, track_id):
         station_tracks = self.gmusic.get_radio_from_track(track_id)
         self.player_clear_playlist()
