@@ -17,6 +17,7 @@ class PlaylistRow(Gtk.EventBox):
 
     playlist_view_more_button = Gtk.Template.Child()
     playlist_listbox_row_popover = Gtk.Template.Child()
+    #TODO Add the track length in time
 
     #pop_over_options
     playlist_popover_add_to_queue = Gtk.Template.Child()
@@ -62,7 +63,3 @@ class PlaylistRow(Gtk.EventBox):
     def load_data(self):
         self.list_box_row_track.set_text(self.track.get('title'))
         self.list_box_row_artist.set_text(self.track.get('artist'))
-
-
-
-                                              

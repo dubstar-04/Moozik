@@ -85,7 +85,7 @@ class PlayBarWidget(Gtk.ActionBar):
     def playbar_widget_slider_update(self, sender, progress):
         mins, seconds = divmod(progress, 60)
         formatted_progress = str(round(mins)) + ':' + str(round(seconds)).zfill(2)
-        print('Track Progress:', formatted_progress)
+        #print('Track Progress:', formatted_progress)
         self.playwidget_slider.set_range(0, self.player.player_get_track_duration())
         self.playwidget_slider.handler_block(self.playwidget_slider_handler_id)
         self.playwidget_slider.set_value(progress)

@@ -2,55 +2,29 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <template class="playlist_listbox_row" parent="GtkEventBox">
+  <template class="queue_listbox_row" parent="GtkEventBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <signal name="button-press-event" handler="playlist_track_selected" swapped="no"/>
+    <property name="visible_window">False</property>
     <signal name="notify::selected" handler="_on_selection_changed" swapped="no"/>
     <child>
-      <object class="GtkBox" id="box1">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="margin_left">18</property>
-        <property name="margin_right">18</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkEventBox" id="queue_row_drag_handle">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
-            <property name="homogeneous">True</property>
+            <property name="above_child">True</property>
             <child>
-              <object class="GtkLabel" id="list_box_row_track">
+              <object class="GtkImage">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">label</property>
-                <property name="ellipsize">end</property>
-                <property name="single_line_mode">True</property>
-                <property name="max_width_chars">40</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <property name="icon_name">open-menu-symbolic</property>
               </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="list_box_row_artist">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">label</property>
-                <property name="max_width_chars">40</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
           <packing>
@@ -60,16 +34,69 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkEventBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="above_child">True</property>
+            <signal name="button-press-event" handler="playlist_track_selected" swapped="no"/>
+            <child>
+              <object class="GtkBox" id="queue_listbox_row_select_area">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_left">12</property>
+                <property name="orientation">vertical</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <object class="GtkLabel" id="list_box_row_track">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">label</property>
+                    <property name="ellipsize">end</property>
+                    <property name="single_line_mode">True</property>
+                    <property name="max_width_chars">40</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="list_box_row_artist">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">label</property>
+                    <property name="max_width_chars">40</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
         </child>
         <child>
-          <object class="GtkButton" id="playlist_view_more_button">
+          <object class="GtkEventBox">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="playlist_view_more_button_clicked" swapped="no"/>
+            <property name="can_focus">False</property>
+            <signal name="button-press-event" handler="playlist_view_more_clicked" swapped="no"/>
             <child>
-              <object class="GtkImage">
+              <object class="GtkImage" id="queue_row_view_more">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="icon_name">view-more-symbolic</property>
@@ -79,7 +106,6 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -88,7 +114,7 @@
   </template>
   <object class="GtkPopover" id="playlist_listbox_row_popover">
     <property name="can_focus">False</property>
-    <property name="relative_to">playlist_view_more_button</property>
+    <property name="relative_to">queue_row_view_more</property>
     <child>
       <object class="GtkStack">
         <property name="visible">True</property>
@@ -104,7 +130,7 @@
                 <property name="can_focus">False</property>
                 <property name="visible_window">False</property>
                 <property name="above_child">True</property>
-                <signal name="button-press-event" handler="add_to_queue_clicked" swapped="no"/>
+                <signal name="button-press-event" handler="remove_from_queue_clicked" swapped="no"/>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
@@ -113,7 +139,7 @@
                     <property name="margin_right">18</property>
                     <property name="margin_top">6</property>
                     <property name="margin_bottom">6</property>
-                    <property name="label" translatable="yes">Add to queue</property>
+                    <property name="label" translatable="yes">Remove</property>
                   </object>
                 </child>
               </object>

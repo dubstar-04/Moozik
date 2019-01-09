@@ -29,6 +29,8 @@ from .widgets import PlaylistRow, NowPlayingPage, AlbumPlaylistPage, TrackListPa
 class MoosicWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'MoosicWindow'
 
+    #TODO: change all member variables to _member
+
     #set up all the accessible widgets
     username_entry = Gtk.Template.Child()
     password_entry = Gtk.Template.Child()
@@ -61,7 +63,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.main_stack.add_titled(self.album_page, 'album_page', 'Albums')
         self.main_stack.add_titled(self.playlist_page, 'playlists_page', 'Playlists')
 
-        self.now_playing_page = NowPlayingPage(self.player)
+        self.now_playing_page = NowPlayingPage(self.gmusic, self.player)
         self.track_list_page = TrackListPage(self.gmusic, self.player)
 
         self.main_stack.add_named(self.now_playing_page, 'now_playing_page')
