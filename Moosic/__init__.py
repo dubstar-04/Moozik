@@ -1,1 +1,1 @@
-from .widgets import AlbumWidget, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget
+from .widgets import AlbumWidget, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, LoginDialog

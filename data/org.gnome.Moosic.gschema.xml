@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="moosic">
 	<schema id="org.gnome.Moosic" path="/org/gnome/Moosic/">
-	  <key name="username" type="s">
-      <default>''</default>
-      <summary>Google Play Username</summary>
-	    <description>Default value is set to an empty string</description>
-    </key>
-	  <key name="password" type="s">
-      <default>''</default>
-      <summary>Google Play Password</summary>
-	    <description>Default value is set to an empty string</description>
-    </key>
 	  <key name="device-id" type="s">
       <default>''</default>
       <summary>Google Play device_id</summary>

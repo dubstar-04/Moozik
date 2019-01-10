@@ -4,7 +4,7 @@ from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from .playlist_listbox_row import *
 
-from .utils import *
+from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/track_list_page.ui')
 class TrackListPage(Gtk.ScrolledWindow):

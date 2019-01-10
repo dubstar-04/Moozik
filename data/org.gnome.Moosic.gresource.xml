@@ -9,5 +9,6 @@
     <file>ui/album_playlist_page.ui</file>
     <file>ui/track_list_page.ui</file>
     <file>ui/play_bar_widget.ui</file>
+    <file>ui/login_dialog.ui</file>
   </gresource>
 </gresources>

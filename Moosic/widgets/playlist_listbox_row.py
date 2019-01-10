@@ -1,7 +1,6 @@
 import gi
 from gi.repository import Gtk, GObject
 from gi.repository.GdkPixbuf import Pixbuf
-#import os
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/playlist_listbox_row.ui')
 class PlaylistRow(Gtk.EventBox):

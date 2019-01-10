@@ -4,7 +4,7 @@ from gi.repository import Gtk, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
 from .queue_listbox_row import *
 
-from .utils import *
+from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/now_playing_page.ui')
 class NowPlayingPage(Gtk.EventBox):
@@ -22,7 +22,7 @@ class NowPlayingPage(Gtk.EventBox):
 
         self.player = player
         self.gmusic = gmusic
-        self.now_playing_listview .set_header_func(list_header_func, None)
+        self.now_playing_listview.set_header_func(list_header_func, None)
 
         self.player.connect("player_playlist_updated_signal", self.update_playlist)
 

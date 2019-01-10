@@ -33,13 +33,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'MoosicWindow'
 
     #TODO: change all member variables to _member
-
-    #set up all the accessible widgets
-    username_entry = Gtk.Template.Child()
-    password_entry = Gtk.Template.Child()
-
     main_stack = Gtk.Template.Child()
-    #album_playlist_stack = Gtk.Template.Child()
     stack_switcher = Gtk.Template.Child()
     back_button = Gtk.Template.Child()
     play_widget_revealer = Gtk.Template.Child()
@@ -48,39 +42,42 @@ class MoosicWindow(Gtk.ApplicationWindow):
         super().__init__(**kwargs)
 
         self.settings = Settings()
-        #TODO move settings to own ui
-        self.settings.get_settings_obj().bind('username', self.username_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
-        self.settings.get_settings_obj().bind('password', self.password_entry, 'text', Gio.SettingsBindFlags.DEFAULT)
-
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
-        #self.load_library()
-
 
         self.album_page = AlbumPlaylistPage(self.gmusic)
-        self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
         self.playlist_page = AlbumPlaylistPage(self.gmusic)
-
-        self.album_page.connect("album_selected_signal", self.album_selected)
-        self.playlist_page.connect("album_selected_signal", self.album_selected)
-
         self.main_stack.add_titled(self.album_page, 'album_page', 'Albums')
         self.main_stack.add_titled(self.playlist_page, 'playlists_page', 'Playlists')
 
         self.now_playing_page = NowPlayingPage(self.gmusic, self.player)
         self.track_list_page = TrackListPage(self.gmusic, self.player)
-
         self.main_stack.add_named(self.now_playing_page, 'now_playing_page')
         self.main_stack.add_named(self.track_list_page, 'track_list_page')
 
         self.play_bar_widget = PlayBarWidget(self.gmusic, self.player, self.play_widget_revealer)
-        self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
-
         self.play_widget_revealer.add(self.play_bar_widget)
 
         self.page_breadcrumbs = []
 
-        init_thread = Thread(target=self.gmusic.api_init, args=())
+        #connections
+        self.gmusic.connect('api_logged_in', self.load_library)
+        self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
+        self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
+        self.album_page.connect("album_selected_signal", self.album_selected)
+        self.playlist_page.connect("album_selected_signal", self.album_selected)
+
+        if self.gmusic.get_oauth_credentials():
+            print('Got oauth credentials')
+            if self.gmusic.log_in():
+                print('logged_in')
+        else:
+            print('Failed to get oauth credentials')
+
+
+    def load_library(self, sender, data):
+        print('load_library:', 'sender:', sender, 'data:', data)
+        init_thread = Thread(target=self.gmusic.load_library, args=())
         init_thread.start()
 
     @Gtk.Template.Callback()
@@ -108,7 +105,6 @@ class MoosicWindow(Gtk.ApplicationWindow):
         else:
             self.page_pop()
 
-    @Gtk.Template.Callback()
     def album_selected(self, sender, index):
         self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
         self.track_list_page.populate_listview(index)
@@ -116,19 +112,3 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.stack_switcher.set_visible(False)
         self.back_button.set_visible(True)
 
-
-    #TODO move settings to its own class
-    @Gtk.Template.Callback()
-    def username_changed(self, sender):
-        username =  self.username_entry.get_text()
-        print('username changed:', username)
-        #self.settings.set_username(username)
-
-    @Gtk.Template.Callback()
-    def password_changed(self, sender):
-        password =  self.password_entry.get_text()
-        print('password changed:', password)
-        #self.settings.set_password(password)
-
-
-        

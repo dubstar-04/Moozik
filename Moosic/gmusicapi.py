@@ -1,8 +1,15 @@
 import gi
 from gi.repository import GObject
-import os, urllib.request, string
-from gmusicapi import Mobileclient
+import os, urllib.request
+import gmusicapi #import Mobileclient
+
+from oauth2client.client import OAuth2WebServerFlow
+import oauth2client.file
+
+from .widgets import LoginDialog
+from .utils import *
 from .settings import *
+
 
 class GmusicAPI(GObject.GObject):
 
@@ -14,7 +21,7 @@ class GmusicAPI(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
         self.settings = Settings()
-        self.api = Mobileclient()
+        self.api = gmusicapi.Mobileclient()
         self.library = None
         self.station_tracks = None
         self.albums = []
@@ -23,27 +30,31 @@ class GmusicAPI(GObject.GObject):
         self.logged_in = False
 
 
-    def api_init(self):
-        print('Starting API init thread')
-        if self.log_in():
-            self.device_id = self.get_device_id()
+    def get_oauth_credentials(self):
+        if os.path.isfile(self.oauth_filename()):
+            return True
+        else:
+            flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
+            auth_uri = flow.step1_get_authorize_url()
+            print('Auth URI', auth_uri)
+            login_dialog = LoginDialog(auth_uri)
+            login_dialog.run()
+            code = login_dialog.get_code()
+            credentials = flow.step2_exchange(code)
+            storage = oauth2client.file.Storage(self.oauth_filename())
+            storage.put(credentials)
+            if os.path.isfile(self.oauth_filename()):
+                return True
+            else:
+                return False
 
-        self.load_library()
-
-    #TODO Use OAuth
     def log_in(self):
-
-        username = self.settings.get_username()
-        password = self.settings.get_password()
-        
         attempts = 0
-
         while not self.logged_in and attempts < 3:
             try:
-                logged_in = self.api.login(username, password, Mobileclient.FROM_MAC_ADDRESS)
+                logged_in = self.api.oauth_login(device_id=gmusicapi.Mobileclient.FROM_MAC_ADDRESS, oauth_credentials=self.oauth_filename())
             except Exception:
                 print('login failed')
-
             attempts += 1
 
         if not self.api.is_authenticated():
@@ -51,16 +62,17 @@ class GmusicAPI(GObject.GObject):
             return False
         else:
             self.emit('api_logged_in', True)
+            self.device_id = self.get_device_id()
             return True
 
     def get_device_id(self):
-
         device_id = self.settings.get_device_id()
         if len(device_id):
             return device_id
 
         device_ids = self.api.get_registered_devices()
         device_id = device_ids[0].get("id").replace('0x', '')
+        #device_id = gmusicapi.Mobileclient.FROM_MAC_ADDRESS
         if len(device_id):
             return device_id
         else:
@@ -79,7 +91,6 @@ class GmusicAPI(GObject.GObject):
 
         #print(self.library)
 
-    #TODO Move this out of the UI thread
     def load_albums(self):
         for song in self.library:
             album_title = song.get("album")
@@ -124,11 +135,20 @@ class GmusicAPI(GObject.GObject):
     def get_albums(self):
         return self.albums
 
+    def oauth_filename(self):
+        xdg_cache_dir = os.environ.get('XDG_CACHE_HOME')
+        cache_dir = os.path.join(xdg_cache_dir, 'oauth')
+        try:
+            os.makedirs(cache_dir, mode=0o755, exist_ok=True)
+        except EnvironmentError:
+            return None
+        else:
+            oauth_filename = os.path.join(cache_dir, 'oauth.cred')
+            return oauth_filename
+
     def art_cache(self):
         xdg_cache_dir = os.environ.get('XDG_CACHE_HOME')
-
         cache_dir = os.path.join(xdg_cache_dir, 'album_art')
-
         try:
             os.makedirs(cache_dir, mode=0o755, exist_ok=True)
         except EnvironmentError:
@@ -137,15 +157,8 @@ class GmusicAPI(GObject.GObject):
             return cache_dir
 
     def get_album_art_name(self, album_title):
-        album_title = self.slugify(album_title)
+        album_title = slugify(album_title)
         return self.art_cache() + '/' + album_title + '.jpg'
-
-    #TODO Move to a helper module
-    def slugify(self, s):
-        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-        filename = ''.join(c for c in s if c in valid_chars)
-        filename = filename.replace(' ','-')
-        return filename
 
     def get_album(self, album_index):
         return self.albums[album_index]

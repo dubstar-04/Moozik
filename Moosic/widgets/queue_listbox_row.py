@@ -1,7 +1,6 @@
 import gi, cairo
 from gi.repository import Gtk, GObject, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
-#import os
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/queue_listbox_row.ui')
 class QueueListboxRow(Gtk.EventBox):
