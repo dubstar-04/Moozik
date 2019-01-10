@@ -11,17 +11,40 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkFlowBox" id="album_flowbox">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_top">4</property>
-            <property name="margin_bottom">4</property>
-            <property name="homogeneous">True</property>
-            <property name="column_spacing">4</property>
-            <property name="row_spacing">4</property>
-            <property name="min_children_per_line">2</property>
-            <property name="max_children_per_line">5</property>
-            <signal name="child-activated" handler="album_selected" swapped="no"/>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkFlowBox" id="album_flowbox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_top">4</property>
+                <property name="margin_bottom">4</property>
+                <property name="homogeneous">True</property>
+                <property name="column_spacing">4</property>
+                <property name="row_spacing">4</property>
+                <property name="min_children_per_line">2</property>
+                <property name="max_children_per_line">5</property>
+                <signal name="child-activated" handler="album_selected" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinner" id="album_playlist_loading_spiner">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
         </child>
       </object>

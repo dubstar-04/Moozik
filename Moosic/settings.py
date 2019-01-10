@@ -22,11 +22,18 @@ class Settings:
         password = self.settings.get_string('password')
         return password
     
+    def set_device_id(self, device_id):
+        self.settings.set_string('device-id', device_id)
+
+    def get_device_id(self):
+        device_id = self.settings.get_string('device-id')
+        return device_id
+
     def network_available(self):
         #TODO Check for network before attempting to log in
         print('Check if there is a network connection before login in')
         return True
-    
+
     def get_settings_obj(self):
         return self.settings
         

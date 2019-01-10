@@ -1,11 +1,7 @@
-#import os
-#import urllib.request
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst, GObject, Gtk
-
 from .gmusicapi import *
-
 from enum import Enum
 
 class Player_State(Enum):

@@ -16,8 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gi, os
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
+#GObject.threads_init()
 from gi.repository.GdkPixbuf import Pixbuf
+
+from threading import Thread
 
 from .gmusicapi import *
 from .player import *
@@ -51,11 +54,12 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
-        self.load_library()
+        #self.load_library()
 
 
-        self.album_page = AlbumPlaylistPage(self.gmusic.get_albums())
-        self.playlist_page = AlbumPlaylistPage(self.gmusic.get_albums())
+        self.album_page = AlbumPlaylistPage(self.gmusic)
+        self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
+        self.playlist_page = AlbumPlaylistPage(self.gmusic)
 
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)
@@ -76,14 +80,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.page_breadcrumbs = []
 
-    #TODO move this to init of the gmusic object
-    def load_library(self):
-        logged_in = self.gmusic.logged_in()
-
-        if logged_in:
-            print('logged in')
-        else:
-            print('not logged in')
+        init_thread = Thread(target=self.gmusic.api_init, args=())
+        init_thread.start()
 
     @Gtk.Template.Callback()
     def back_button_pressed(self, sender):

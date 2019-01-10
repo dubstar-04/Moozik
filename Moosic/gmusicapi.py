@@ -1,13 +1,18 @@
+import gi
+from gi.repository import GObject
+import os, urllib.request, string
 from gmusicapi import Mobileclient
 from .settings import *
 
-import os
-import urllib.request
-#import re
-import string
+class GmusicAPI(GObject.GObject):
 
-class GmusicAPI():
+
+    __gsignals__ =  {'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
+                     'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,))}
+
+
     def __init__(self):
+        GObject.GObject.__init__(self)
         self.settings = Settings()
         self.api = Mobileclient()
         self.library = None
@@ -15,46 +20,63 @@ class GmusicAPI():
         self.albums = []
         self.playlists = None
         self.device_id = None
+        self.logged_in = False
 
+
+    def api_init(self):
+        print('Starting API init thread')
+        if self.log_in():
+            self.device_id = self.get_device_id()
+
+        self.load_library()
 
     #TODO Use OAuth
-    def logged_in(self):
+    def log_in(self):
 
-        logged_in = False
-        attempts = 0
-        
         username = self.settings.get_username()
         password = self.settings.get_password()
         
-        print(username, password)
+        attempts = 0
 
-        while not logged_in and attempts < 3:
-            logged_in = self.api.login(username, password, Mobileclient.FROM_MAC_ADDRESS)
+        while not self.logged_in and attempts < 3:
+            try:
+                logged_in = self.api.login(username, password, Mobileclient.FROM_MAC_ADDRESS)
+            except Exception:
+                print('login failed')
+
             attempts += 1
 
-        #return logged_in
-    
         if not self.api.is_authenticated():
-            print("Sorry, those credentials weren't accepted.")
+            self.emit('api_logged_in', False)
             return False
         else:
-            print("Success, credentials accepted.")
-            self.get_device_id()
-            self.load_library()
-            #self.load_playlists()
+            self.emit('api_logged_in', True)
             return True
 
     def get_device_id(self):
+
+        device_id = self.settings.get_device_id()
+        if len(device_id):
+            return device_id
+
         device_ids = self.api.get_registered_devices()
-        #print('device_ids:', device_ids)
-        self.device_id = device_ids[0].get("id").replace('0x', '')
-        print('Device ID:', self.device_id)
+        device_id = device_ids[0].get("id").replace('0x', '')
+        if len(device_id):
+            return device_id
+        else:
+            print ('failed to establish device id')
 
     def load_library(self):
         self.library = self.api.get_all_songs()
         self.load_albums()
+        print('API Albums Loaded')
+
+        if len(self.albums):
+            print('Album count :', len(self.albums))
+            self.emit('api_albums_loaded', True)
+
         self.load_album_art()
-        print('Album count :', len(self.albums))
+
         #print(self.library)
 
     #TODO Move this out of the UI thread
@@ -77,6 +99,7 @@ class GmusicAPI():
             #if album not in self.albums:
             if not any(album.get('title', None) == album_title for album in self.albums):
                 self.albums.append(album)
+
 
     #TODO Impliment some type of lazy loading for the album art
     def load_album_art(self):

@@ -37,7 +37,6 @@ class AlbumWidget(Gtk.EventBox):
     def get_album_title():
         return self.album.get('title')
 
-    @Gtk.Template.Callback()
     def album_selected(self, sender, child):
         print('album_widget_pressed:')
         #self.emit("album_selected_signal", [self.track.get('id')])

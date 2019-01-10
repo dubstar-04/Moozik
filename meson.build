@@ -3,7 +3,7 @@ project('Moosic',
   	meson_version: '>= 0.40.0',
 )
 
-application_id = 'org.gnome.Moosic.desktop'
+application_id = 'org.gnome.Moosic'
 
 i18n   = import('i18n')
 python = import('python3')

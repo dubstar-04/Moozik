@@ -23,7 +23,6 @@ from gi.repository import Gtk, Gio
 
 from .window import MoosicWindow
 
-
 class Application(Gtk.Application):
     def __init__(self):
         super().__init__(application_id='org.gnome.Moosic',

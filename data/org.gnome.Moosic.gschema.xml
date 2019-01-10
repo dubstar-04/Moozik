@@ -11,5 +11,10 @@
       <summary>Google Play Password</summary>
 	    <description>Default value is set to an empty string</description>
     </key>
+	  <key name="device-id" type="s">
+      <default>''</default>
+      <summary>Google Play device_id</summary>
+	    <description>Default value is set to an empty string</description>
+    </key>
 	</schema>
 </schemalist>
