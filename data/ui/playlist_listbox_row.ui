@@ -5,7 +5,6 @@
   <template class="playlist_listbox_row" parent="GtkEventBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <signal name="button-press-event" handler="playlist_track_selected" swapped="no"/>
     <signal name="notify::selected" handler="_on_selection_changed" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
@@ -19,18 +18,51 @@
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <property name="homogeneous">True</property>
+            <signal name="button-press-event" handler="playlist_track_selected" swapped="no"/>
             <child>
-              <object class="GtkLabel" id="list_box_row_track">
+              <object class="GtkEventBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">label</property>
-                <property name="ellipsize">end</property>
-                <property name="single_line_mode">True</property>
-                <property name="max_width_chars">40</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel" id="list_box_row_track">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">label</property>
+                        <property name="ellipsize">end</property>
+                        <property name="single_line_mode">True</property>
+                        <property name="max_width_chars">40</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="list_box_row_artist">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">label</property>
+                        <property name="max_width_chars">40</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -38,38 +70,23 @@
                 <property name="position">0</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkLabel" id="list_box_row_artist">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="label" translatable="yes">label</property>
-                <property name="max_width_chars">40</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <object class="GtkButton" id="playlist_view_more_button">
+          <object class="GtkEventBox">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="playlist_view_more_button_clicked" swapped="no"/>
+            <property name="can_focus">False</property>
+            <property name="margin_left">191</property>
+            <signal name="button-press-event" handler="playlist_view_more_button_clicked" swapped="no"/>
             <child>
-              <object class="GtkImage">
+              <object class="GtkImage" id="playlist_view_more_button">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="icon_name">view-more-symbolic</property>

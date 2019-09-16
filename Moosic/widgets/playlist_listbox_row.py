@@ -54,7 +54,7 @@ class PlaylistRow(Gtk.EventBox):
         self.emit("play_track_signal", self.track.get('id'))
 
     @Gtk.Template.Callback()
-    def playlist_view_more_button_clicked(self, sender):
+    def playlist_view_more_button_clicked(self, sender, child):
         print("Playlist More Button Clicked")
         #self.playlist_listbox_row_popover.show_all()
         self.playlist_listbox_row_popover.popup()
