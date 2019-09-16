@@ -1,7 +1,7 @@
 {
     "app-id" : "org.gnome.Moosic",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.30",
+    "runtime-version" : "3.32",
     "sdk" : "org.gnome.Sdk",
     "command" : "moosic",
     "finish-args" : [
@@ -34,20 +34,20 @@
         "*.a"
     ],
     "modules" : [
-    {
+        {
             "name" : "libhandy",
             "buildsystem" : "meson",
             "config-opts" : [
-                "-Dintrospection=true",
+                "-Dintrospection=disabled",
                 "-Dgtk_doc=false",
                 "-Dtests=false",
                 "-Dexamples=false",
                 "-Dvapi=false",
-                "-Dglade_catalog=false"
+                "-Dglade_catalog=disabled"
             ],
             "cleanup" : [
-              "/include",
-              "/lib/pkgconfig"
+                "/include",
+                "/lib/pkgconfig"
             ],
             "sources" : [
                 {
@@ -80,8 +80,13 @@
                 },
                 {
                     "type" : "file",
-                    "url" : "https://files.pythonhosted.org/packages/37/06/754589caf971b0d2d48f151c2586f62902d93dc908e2fd9b9b9f6aa3c9dd/setuptools-40.6.3-py2.py3-none-any.whl",
-                    "sha256" : "e2c1ce9a832f34cf7a31ed010aabcab5008eb65ce8f2aadc04622232c14bdd0b"
+                    "url" : "https://files.pythonhosted.org/packages/b2/86/095d2f7829badc207c893dd4ac767e871f6cd547145df797ea26baea4e2e/setuptools-41.2.0-py2.py3-none-any.whl",
+                    "sha256" : "4380abcf2a4ffd1a5ba22d687c6d690dce83b2b51c70e9c6d09f7e8c7e8040dc"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/1d/70/97966deebaeeda0b81d3cd63ba9f8ec929b838871ed17476de9d8159db3e/setuptools_scm-3.3.3-py2.py3-none-any.whl",
+                    "sha256" : "1f11cb2eea431346d46589c2dafcafe2e7dc1c7b2c70bc4c3752d2048ad5c148"
                 },
                 {
                     "type" : "file",
@@ -225,7 +230,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/sandal/Projects/Moosic"
+                    "url" : "file:///home/sandal/github/Moosic"
                 }
             ]
         }
