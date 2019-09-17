@@ -78,6 +78,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def load_library(self, sender, data):
         print('load_library:', 'sender:', sender, 'data:', data)
         init_thread = Thread(target=self.gmusic.load_library, args=())
+        init_thread.daemon = True
         init_thread.start()
 
     @Gtk.Template.Callback()
