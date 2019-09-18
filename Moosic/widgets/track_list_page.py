@@ -2,7 +2,7 @@ import gi, os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
-from .playlist_listbox_row import *
+from .listbox_row import *
 
 from ..utils import *
 
@@ -43,7 +43,8 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         #TODO sort tracks by album order
         for track in tracks:
-            play_list_track = PlaylistRow(track)
+            play_list_track = ListboxRow(track)
+            play_list_track.load_data(track.get('title'), track.get('artist'))
             play_list_track.connect("play_track_signal", self.player.player_play_single_track)
             play_list_track.connect("add_to_queue_signal", self.player.player_add_to_playlist)
             play_list_track.connect("play_station_signal", self.player.player_play_radio_station)

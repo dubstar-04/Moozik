@@ -23,6 +23,7 @@ class GmusicAPI(GObject.GObject):
         self.settings = Settings()
         self.api = gmusicapi.Mobileclient()
         self.library = None
+        self.search_results = []
         self.station_tracks = None
         self.albums = []
         self.playlists = None
@@ -86,9 +87,63 @@ class GmusicAPI(GObject.GObject):
         if len(self.albums):
             print('Album count :', len(self.albums))
             self.emit('api_albums_loaded', True)
-            self.load_album_art()
+            self.load_album_art(self.albums)
 
         #print(self.library)
+
+    def search_library(self, search_query):
+
+        self.search_results = []
+
+        if len(search_query):
+            search_hits = self.api.search(search_query, max_results=10)
+            if search_hits:
+                for source, data in search_hits.items():
+                     if  source == 'album_hits' or source == 'song_hits':
+                        for entry in data:
+                            for key, value in entry.items():
+                                if key == 'album' or key == 'track':
+                                    print('data:', value)
+
+                                    album = value
+
+                                    title = 'name'
+                                    track_id = ''
+
+                                    if key == 'track':
+                                        title = 'title'
+                                        track_id = album.get("storeId")
+                                        print('####### Track ID #######', track_id, album.get("storeId"))
+
+
+                                    album_title = album.get(title)
+                                    album_art_path = self.get_album_art_name(album_title, True)
+                                    album_id = album.get("albumId")
+                                    artist = album.get("artist")
+
+                                    album_art_url = ''
+                                    try:
+                                        if key == 'album':
+                                            album_art_url = album.get("albumArtRef")
+                                        else:
+                                            album_art_url = album.get("albumArtRef")[0].get("url")
+                                    except Exception:
+                                        print('no album art available')
+
+                                    album = {'source_type':key, 'title':album_title, 'album_id':album_id, 'id':track_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
+                                    self.search_results.append(album)
+
+                self.load_album_art(self.search_results)
+
+
+            #hit: artist_hits
+            #hit: playlist_hits
+            #hit: genre_hits
+            #hit: podcast_hits
+            #hit: situation_hits
+            #hit: song_hits
+            #hit: station_hits
+            #hit: video_hits
 
     def load_albums(self):
         for song in self.library:
@@ -112,8 +167,8 @@ class GmusicAPI(GObject.GObject):
 
 
     #TODO Impliment some type of lazy loading for the album art
-    def load_album_art(self):
-        for album in self.albums:
+    def load_album_art(self, albums):
+        for album in albums:
             file_path = album.get('album_art_path')
             art_url = album.get('album_art_url')
             #print('art_url:', art_url, 'Path:', file_path)
@@ -135,6 +190,9 @@ class GmusicAPI(GObject.GObject):
     def get_albums(self):
         return self.albums
 
+    def get_search_results(self):
+        return self.search_results
+
     def oauth_filename(self):
         xdg_cache_dir = os.environ.get('XDG_CACHE_HOME')
         cache_dir = os.path.join(xdg_cache_dir, 'oauth')
@@ -146,9 +204,13 @@ class GmusicAPI(GObject.GObject):
             oauth_filename = os.path.join(cache_dir, 'oauth.cred')
             return oauth_filename
 
-    def art_cache(self):
+    def art_cache(self, temp):
+        dir_name = 'album_art'
+        if temp:
+            dir_name = 'temp_album_art'
+
         xdg_cache_dir = os.environ.get('XDG_CACHE_HOME')
-        cache_dir = os.path.join(xdg_cache_dir, 'album_art')
+        cache_dir = os.path.join(xdg_cache_dir, dir_name)
         try:
             os.makedirs(cache_dir, mode=0o755, exist_ok=True)
         except EnvironmentError:
@@ -156,9 +218,9 @@ class GmusicAPI(GObject.GObject):
         else:
             return cache_dir
 
-    def get_album_art_name(self, album_title):
+    def get_album_art_name(self, album_title, temp=False):
         album_title = slugify(album_title)
-        return self.art_cache() + '/' + album_title + '.jpg'
+        return self.art_cache(temp) + '/' + album_title + '.jpg'
 
     def get_album(self, album_index):
         return self.albums[album_index]

@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
-from .queue_listbox_row import *
+from .listbox_row import *
 
 from ..utils import *
 
@@ -44,9 +44,13 @@ class NowPlayingPage(Gtk.EventBox):
 
         art_list = []
 
+        #use Drag and Drop
+        DnD = True
+
         for track in tracks:
             #print(track)
-            play_list_track = QueueListboxRow(track)
+            play_list_track = ListboxRow(track, DnD)
+            play_list_track.load_data(track.get('title'), track.get('artist'))
             #TODO player.play_single_track clears the current playlist.
             play_list_track.connect("queue_track_selected_signal", self.player.player_play_queue_track)
             #TODO add to queue makes no sense on the current playlist

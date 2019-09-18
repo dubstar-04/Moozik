@@ -1,39 +1,45 @@
-import gi, cairo
+import os, gi, cairo
 from gi.repository import Gtk, GObject, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/queue_listbox_row.ui')
-class QueueListboxRow(Gtk.EventBox):
+@Gtk.Template(resource_path='/org/gnome/Moosic/ui/listbox_row.ui')
+class ListboxRow(Gtk.EventBox):
 
-    __gtype_name__ = 'queue_listbox_row'
+    __gtype_name__ = 'listbox_row'
 
     __gsignals__ = {'queue_track_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                     'remove_from_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
-                    'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
-                    'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,))}
+                    'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                    'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
+                    'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                    'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
 
     list_box_row_track = Gtk.Template.Child()
     list_box_row_artist = Gtk.Template.Child()
+    list_box_row_album_art = Gtk.Template.Child()
 
     #TODO Add the track length in time
-    playlist_listbox_row_popover = Gtk.Template.Child()
-    queue_row_drag_handle = Gtk.Template.Child()
+    listbox_row_popover = Gtk.Template.Child()
+    row_drag_handle = Gtk.Template.Child()
 
-    def __init__(self, track):
+    def __init__(self, track, DnD=False):
         super().__init__()
 
         self.track = track
-        self.load_data()
+        #self.load_data()
+
+        #only show the drag handle if drag and drop is being used
+        self.row_drag_handle.set_visible(DnD)
 
         #Drag and Drop
         target = Gtk.TargetEntry.new('Gtk.ListBoxRow', Gtk.TargetFlags(1), 129)
 
         #source
-        self.queue_row_drag_handle.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, [target], Gdk.DragAction.MOVE);
-        self.queue_row_drag_handle.connect("drag-data-get", self.on_drag_data_get)
-        self.queue_row_drag_handle.connect("drag-begin", self.on_drag_begin)
+        self.row_drag_handle.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, [target], Gdk.DragAction.MOVE);
+        self.row_drag_handle.connect("drag-data-get", self.on_drag_data_get)
+        self.row_drag_handle.connect("drag-begin", self.on_drag_begin)
 
-         #destination
+        #destination
         self.drag_dest_set(Gtk.DestDefaults.ALL, [target], Gdk.DragAction.MOVE)
         self.connect("drag-data-received", self.on_drag_data_received)
 
@@ -65,35 +71,49 @@ class QueueListboxRow(Gtk.EventBox):
         self.emit("reorder_signal", [source_index, target_index])
 
     @Gtk.Template.Callback()
-    def remove_from_queue_clicked(self, sender, child):
-        print(sender, child)
-        print('Remove From Queue clicked - Index:', self.get_parent().get_index())
-        self.playlist_listbox_row_popover.popdown()
-        self.emit("remove_from_queue_signal", self.get_parent().get_index())
+    def add_to_queue_clicked(self, sender, child):
+        self.emit("add_to_queue_signal", [self.track.get('id')])
+        self.listbox_row_popover.popdown()
+
+ #   @Gtk.Template.Callback()
+ #   def remove_from_queue_clicked(self, sender, child):
+ #       print(sender, child)
+ #       print('Remove From Queue clicked - Index:', self.get_parent().get_index())
+ #       self.listbox_row_popover.popdown()
+ #       self.emit("remove_from_queue_signal", self.get_parent().get_index())
 
     @Gtk.Template.Callback()
     def add_to_playlist_clicked(self, sender, child):
         print('Add to playlist:', self.track.get('title'))
-        #self.playlist_listbox_row_popover.popdown()
+        #self.listbox_row_popover.popdown()
 
     @Gtk.Template.Callback()
     def start_radio_clicked(self, sender, child):
         print('start radio:', self.track.get('title'))
-        self.playlist_listbox_row_popover.popdown()
+        self.listbox_row_popover.popdown()
         self.emit("play_station_signal", [self.track.get('id')])
 
 
     @Gtk.Template.Callback()
     def playlist_track_selected(self, sender, child):
-        print('Queue Track Clicked:', self.track)
-        self.emit("queue_track_selected_signal", self.get_parent().get_index())
+        print('Track Clicked:', self.track)
+        #self.emit("queue_track_selected_signal", self.get_parent().get_index())
+        self.emit("play_track_signal", self.track.get('id'))
 
     @Gtk.Template.Callback()
     def playlist_view_more_clicked(self, sender, child):
         print("Playlist More Clicked")
-        #self.playlist_listbox_row_popover.show_all()
-        self.playlist_listbox_row_popover.popup()
+        self.listbox_row_popover.popup()
 
-    def load_data(self):
-        self.list_box_row_track.set_text(self.track.get('title'))
-        self.list_box_row_artist.set_text(self.track.get('artist'))
+    def load_data(self, title, subtitle):
+        self.list_box_row_track.set_text(title)
+        self.list_box_row_artist.set_text(subtitle)
+
+    def load_album_art(self, album_art_path):
+
+        #album_art_path = album.get("album_art_path")
+
+        self.list_box_row_album_art.set_visible(True)
+
+        if os.path.isfile(album_art_path):
+            self.list_box_row_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 40, 40))

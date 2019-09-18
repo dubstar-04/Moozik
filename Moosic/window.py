@@ -20,13 +20,16 @@ from gi.repository import Gtk, GObject
 #GObject.threads_init()
 from gi.repository.GdkPixbuf import Pixbuf
 
+#gi.require_version('Handy', '0.0')
+#from gi.repository import Handy
+
 from threading import Thread
 
 from .gmusicapi import *
 from .player import *
 from .settings import *
 
-from .widgets import PlaylistRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget
+from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/window.ui')
 class MoosicWindow(Gtk.ApplicationWindow):
@@ -36,6 +39,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
     main_stack = Gtk.Template.Child()
     stack_switcher = Gtk.Template.Child()
     back_button = Gtk.Template.Child()
+    search_button = Gtk.Template.Child()
+    search_bar = Gtk.Template.Child()
+    search_entry = Gtk.Template.Child()
+    #search_results_list = Gtk.Template.Child()
+    #search_widget_revealer = Gtk.Template.Child()
     play_widget_revealer = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
@@ -52,8 +60,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
         self.now_playing_page = NowPlayingPage(self.gmusic, self.player)
         self.track_list_page = TrackListPage(self.gmusic, self.player)
+        self.search_page = SearchPage(self.gmusic, self.player)
+
         self.main_stack.add_named(self.now_playing_page, 'now_playing_page')
         self.main_stack.add_named(self.track_list_page, 'track_list_page')
+        self.main_stack.add_named(self.search_page, 'search_page')
 
         self.play_bar_widget = PlayBarWidget(self.gmusic, self.player, self.play_widget_revealer)
         self.play_widget_revealer.add(self.play_bar_widget)
@@ -84,6 +95,38 @@ class MoosicWindow(Gtk.ApplicationWindow):
     @Gtk.Template.Callback()
     def back_button_pressed(self, sender):
         self.page_pop()
+        #hide the search bar
+        if self.search_bar.get_search_mode():
+            self.search_bar.set_search_mode(False)
+            self.search_button.set_active(False)
+
+    @Gtk.Template.Callback()
+    def search_button_pressed(self, sender, data):
+        print("show search", data)
+        show_search = not self.search_bar.get_search_mode()
+        self.search_bar.set_search_mode(show_search)
+        #self.search_widget_revealer.set_reveal_child(show_search)
+        current_page = self.add_page('search_page')
+        if current_page:
+            print('search_page is current page')
+
+    @Gtk.Template.Callback()
+    def init_search(self, sender):
+        search_text = sender.get_text()
+
+        self.gmusic.search_library(search_text)
+        self.search_page.load_search_results()
+
+    def add_page(self, page_name):
+        if self.main_stack.get_visible_child_name() != page_name:
+            self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
+            self.stack_switcher.set_visible(False)
+            self.back_button.set_visible(True)
+            self.main_stack.set_visible_child_name(page_name)
+            return True
+        else:
+            self.page_pop()
+            return False
 
     def page_pop(self):
         print(self.page_breadcrumbs)
@@ -97,19 +140,16 @@ class MoosicWindow(Gtk.ApplicationWindow):
             self.back_button.set_visible(False)
 
     def show_now_playing_page(self, sender, data):
-        if self.main_stack.get_visible_child_name() != 'now_playing_page':
-            self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
-            self.stack_switcher.set_visible(False)
-            self.back_button.set_visible(True)
+        current_page = self.add_page('now_playing_page')
+        if current_page:
+            print('now_playing_page is current page')
             self.now_playing_page.load_current_playlist()
-            self.main_stack.set_visible_child_name('now_playing_page')
-        else:
-            self.page_pop()
 
     def album_selected(self, sender, index):
         self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
         self.track_list_page.populate_listview(index)
         self.main_stack.set_visible_child_name('track_list_page')
         self.stack_switcher.set_visible(False)
+        self.search_bar.set_search_mode(False)
         self.back_button.set_visible(True)
 
