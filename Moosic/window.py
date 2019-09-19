@@ -25,6 +25,8 @@ from gi.repository.GdkPixbuf import Pixbuf
 
 from threading import Thread
 
+import pychromecast
+
 from .gmusicapi import *
 from .player import *
 from .settings import *
@@ -85,6 +87,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
         else:
             print('Failed to get oauth credentials')
 
+       # chromecast example
+       # chromecasts = pychromecast.get_chromecasts()
+       #
+       # for cc in chromecasts:
+       #     print('chromecast:', cc.device.friendly_name)
 
     def load_library(self, sender, data):
         print('load_library:', 'sender:', sender, 'data:', data)

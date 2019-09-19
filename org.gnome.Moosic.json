@@ -217,9 +217,63 @@
                     "type" : "file",
                     "url" : "https://files.pythonhosted.org/packages/33/07/6e68a96ff240a0e7bb1f6e21093532386a98a82d56512e1e3da6d125f7aa/pbr-5.1.1.tar.gz",
                     "sha256" : "f59d71442f9ece3dffc17bc36575768e1ee9967756e6b6535f0ee1f0054c3d68"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/aa/65/a604c6e04c5c5aa88c5a7870b20cecc3af7c3eccea5b8840c94a9df1a960/PyChromecast-4.0.1-py2.py3-none-any.whl",
+                    "sha256" : "3f622b35009ebd04cb8d2f5e948985a0f585833f8a837f27e113e97d4704ac87"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/c0/1a/b594e55ed85942789ceb4233f8cbca946873be5f77a02c1c75ef6944e6fe/zeroconf-0.23.0-py3-none-any.whl",
+                    "sha256" : "21d02538ff52fc572e1d785c692b97b8d4374623cb95d593cc06ab92bd5aaf61"
                 }
             ]
         },
+
+
+                {
+            "name" : "python3-pychromecast",
+            "buildsystem" : "simple",
+            "build-options" : {
+                "build-args" : [
+                    "--share=network"
+                ]
+            },
+            "build-commands" : [
+                "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pychromecast"
+            ],
+            "sources" : [
+
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/1b/90/f531329e628ff34aee79b0b9523196eb7b5b6b398f112bb0c03b24ab1973/protobuf-3.6.1.tar.gz",
+                    "sha256" : "1489b376b0f364bcc6f89519718c057eb191d7ad6f1b395ffd93d1aa45587811"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/9f/54/d92bda685093ebc70e2057abfa83ef1b3fb0ae2b6357262a3e19dfe96bb8/ifaddr-0.1.6.tar.gz",
+                    "sha256" : "c19c64882a7ad51a394451dabcbbed72e98b5625ec1e79789924d5ea3e3ecb93"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/31/ef/acf3646cf670d095cf29e1f21b7cfc4eb6f896d6dfe0f7264ed6a624e8c7/casttube-0.2.0-py3-none-any.whl",
+                    "sha256" : "0979c7126e7bd6a09ebe45b819dcdfeb9b77839c2650b5b97333168150c4265c"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/aa/65/a604c6e04c5c5aa88c5a7870b20cecc3af7c3eccea5b8840c94a9df1a960/PyChromecast-4.0.1-py2.py3-none-any.whl",
+                    "sha256" : "3f622b35009ebd04cb8d2f5e948985a0f585833f8a837f27e113e97d4704ac87"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/c0/1a/b594e55ed85942789ceb4233f8cbca946873be5f77a02c1c75ef6944e6fe/zeroconf-0.23.0-py3-none-any.whl",
+                    "sha256" : "21d02538ff52fc572e1d785c692b97b8d4374623cb95d593cc06ab92bd5aaf61"
+                }
+            ]
+        },
+
+
         {
             "name" : "moosic",
             "buildsystem" : "meson",
