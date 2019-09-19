@@ -24,6 +24,7 @@ from gi.repository.GdkPixbuf import Pixbuf
 #from gi.repository import Handy
 
 from threading import Thread
+from threading import Timer
 
 import pychromecast
 
@@ -76,9 +77,13 @@ class MoosicWindow(Gtk.ApplicationWindow):
         #connections
         self.gmusic.connect('api_logged_in', self.load_library)
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
+        self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)
+        self.search_page.connect("album_selected_signal", self.album_selected)
+
+
 
         if self.gmusic.get_oauth_credentials():
             print('Got oauth credentials')
@@ -96,39 +101,45 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def load_library(self, sender, data):
         print('load_library:', 'sender:', sender, 'data:', data)
         init_thread = Thread(target=self.gmusic.load_library, args=())
-        init_thread.daemon = True
+        #init_thread.daemon = True
         init_thread.start()
+        #TODO does this need threading?
+        #self.gmusic.load_library()
 
     @Gtk.Template.Callback()
     def back_button_pressed(self, sender):
         self.page_pop()
         #hide the search bar
         if self.search_bar.get_search_mode():
-            self.search_bar.set_search_mode(False)
-            self.search_button.set_active(False)
+            self.hide_search()
 
     @Gtk.Template.Callback()
     def search_button_pressed(self, sender, data):
         print("show search", data)
-        show_search = not self.search_bar.get_search_mode()
-        self.search_bar.set_search_mode(show_search)
-        #self.search_widget_revealer.set_reveal_child(show_search)
         current_page = self.add_page('search_page')
         if current_page:
             print('search_page is current page')
+            show_search = not self.search_bar.get_search_mode()
+            self.search_bar.set_search_mode(show_search)
+        else:
+            self.hide_search()
 
     @Gtk.Template.Callback()
     def init_search(self, sender):
-        search_text = sender.get_text()
-
-        self.gmusic.search_library(search_text)
+        self.search_text = sender.get_text()
+        self.gmusic.search_library(self.search_text)
         self.search_page.load_search_results()
+
+    def hide_search(self):
+        self.search_bar.set_search_mode(False)
+        self.search_button.set_active(False)
 
     def add_page(self, page_name):
         if self.main_stack.get_visible_child_name() != page_name:
             self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
             self.stack_switcher.set_visible(False)
             self.back_button.set_visible(True)
+            self.hide_search()
             self.main_stack.set_visible_child_name(page_name)
             return True
         else:
@@ -152,11 +163,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
             print('now_playing_page is current page')
             self.now_playing_page.load_current_playlist()
 
-    def album_selected(self, sender, index):
-        self.page_breadcrumbs.append(self.main_stack.get_visible_child_name())
-        self.track_list_page.populate_listview(index)
-        self.main_stack.set_visible_child_name('track_list_page')
-        self.stack_switcher.set_visible(False)
-        self.search_bar.set_search_mode(False)
-        self.back_button.set_visible(True)
+    def album_selected(self, sender, tracks):
+        self.track_list_page.populate_listview(tracks)
+        self.add_page('track_list_page')
+
 

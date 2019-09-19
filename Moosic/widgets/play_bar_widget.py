@@ -52,7 +52,7 @@ class PlayBarWidget(Gtk.ActionBar):
         track = self.player.player_get_playing_track()
         self.play_widget_track_title.set_text(track.get('title'))
         self.playwidget_artist.set_text(track.get('artist'))
-        album_art_path = self.gmusic.get_album_art_name(track.get('album'))
+        album_art_path = track.get('album_art_path') #self.gmusic.get_album_art_name(track.get('album'))
         #TODO what is the correct artwork size?
         #TODO redesign the playbar so the progress bar is full width
         self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))

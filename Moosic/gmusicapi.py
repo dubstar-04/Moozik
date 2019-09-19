@@ -1,6 +1,6 @@
 import gi
 from gi.repository import GObject
-import os, urllib.request
+import shutil, os, urllib.request
 import gmusicapi #import Mobileclient
 
 from oauth2client.client import OAuth2WebServerFlow
@@ -10,12 +10,15 @@ from .widgets import LoginDialog
 from .utils import *
 from .settings import *
 
+from threading import Thread
+
 
 class GmusicAPI(GObject.GObject):
 
 
     __gsignals__ =  {'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
-                     'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,))}
+                     'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
+                     'album_art_updated' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,))}
 
 
     def __init__(self):
@@ -30,6 +33,11 @@ class GmusicAPI(GObject.GObject):
         self.device_id = None
         self.logged_in = False
 
+        try:
+            #delete the temp art_cache
+            shutil.rmtree(self.art_cache(temp=True))
+        except OSError as e:
+            print ("Error: %s - %s." % (e.filename, e.strerror))
 
     def get_oauth_credentials(self):
         if os.path.isfile(self.oauth_filename()):
@@ -54,8 +62,8 @@ class GmusicAPI(GObject.GObject):
         while not self.logged_in and attempts < 3:
             try:
                 logged_in = self.api.oauth_login(device_id=gmusicapi.Mobileclient.FROM_MAC_ADDRESS, oauth_credentials=self.oauth_filename())
-            except Exception:
-                print('login failed')
+            except Exception as e:
+                print('login failed', e)
             attempts += 1
 
         if not self.api.is_authenticated():
@@ -73,6 +81,7 @@ class GmusicAPI(GObject.GObject):
 
         device_ids = self.api.get_registered_devices()
         device_id = device_ids[0].get("id").replace('0x', '')
+        #TODO handle device_id being empty
         #device_id = gmusicapi.Mobileclient.FROM_MAC_ADDRESS
         if len(device_id):
             return device_id
@@ -91,6 +100,33 @@ class GmusicAPI(GObject.GObject):
 
         #print(self.library)
 
+    def load_albums(self):
+        missing_art_count = 0
+        for song in self.library:
+            album_title = song.get("album")
+            album_id = song.get("albumId")
+            artist = song.get("artist")
+            album_art_path = self.get_album_art_name(album_title)
+
+            #add new key to song for a harmonized id
+            song['moozik_id'] = song.get('id')
+            song['album_art_path'] = album_art_path
+
+            #TODO Should we always used the first album art?
+            album_art_url = ''
+            try:
+                album_art_url = song.get("albumArtRef")[0].get("url")
+            except Exception as e:
+                missing_art_count += 1
+
+            album = {'title':album_title, 'album_id':album_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
+
+            #if album not in self.albums:
+            if not any(album.get('title', None) == album_title for album in self.albums):
+                self.albums.append(album)
+
+        print('Missing Album Art:', missing_art_count)
+
     def search_library(self, search_query):
 
         self.search_results = []
@@ -105,33 +141,37 @@ class GmusicAPI(GObject.GObject):
                                 if key == 'album' or key == 'track':
                                     print('data:', value)
 
-                                    album = value
+                                    item = value
 
-                                    title = 'name'
-                                    track_id = ''
+                                    _title = 'name'
+                                    _album = 'name'
+                                    store_id = ''
+
 
                                     if key == 'track':
-                                        title = 'title'
-                                        track_id = album.get("storeId")
-                                        print('####### Track ID #######', track_id, album.get("storeId"))
+                                        _title = 'title'
+                                        _album = 'album'
+                                        store_id = item.get("storeId")
 
-
-                                    album_title = album.get(title)
+                                    album_title = item.get(_title)
+                                    album = item.get(_album)
                                     album_art_path = self.get_album_art_name(album_title, True)
-                                    album_id = album.get("albumId")
-                                    artist = album.get("artist")
+                                    album_id = item.get("albumId")
+                                    artist = item.get("artist")
+
 
                                     album_art_url = ''
                                     try:
                                         if key == 'album':
-                                            album_art_url = album.get("albumArtRef")
+                                            album_art_url = item.get("albumArtRef")
                                         else:
-                                            album_art_url = album.get("albumArtRef")[0].get("url")
+                                            album_art_url = item.get("albumArtRef")[0].get("url")
                                     except Exception:
-                                        print('no album art available')
+                                        #print('no album art available')
+                                        pass
 
-                                    album = {'source_type':key, 'title':album_title, 'album_id':album_id, 'id':track_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
-                                    self.search_results.append(album)
+                                    item_data = {'kind': item.get('kind'), 'title':album_title, 'album':album, 'album_id':album_id, 'storeId':store_id, 'moozik_id':store_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
+                                    self.search_results.append(item_data)
 
                 self.load_album_art(self.search_results)
 
@@ -145,29 +185,14 @@ class GmusicAPI(GObject.GObject):
             #hit: station_hits
             #hit: video_hits
 
-    def load_albums(self):
-        for song in self.library:
-            album_title = song.get("album")
-            album_id = song.get("albumId")
-            artist = song.get("artist")
-            album_art_path = self.get_album_art_name(album_title)
-
-            #TODO Should we always used the first album art?
-            album_art_url = ''
-            try:
-                album_art_url = song.get("albumArtRef")[0].get("url")
-            except Exception:
-                print('no album art available')
-
-            album = {'title':album_title, 'album_id':album_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
-
-            #if album not in self.albums:
-            if not any(album.get('title', None) == album_title for album in self.albums):
-                self.albums.append(album)
-
-
     #TODO Impliment some type of lazy loading for the album art
     def load_album_art(self, albums):
+
+        init_thread = Thread(target=self.download_album_art, args=[albums])
+        #init_thread.daemon = True
+        init_thread.start()
+
+    def download_album_art(self, albums):
         for album in albums:
             file_path = album.get('album_art_path')
             art_url = album.get('album_art_url')
@@ -177,8 +202,10 @@ class GmusicAPI(GObject.GObject):
                     print('file path:', file_path, ' url: ', art_url)
                     try:
                         urllib.request.urlretrieve(art_url, file_path)
-                    except Exception:
-                        print('Artwork could not be downloaded:', Exception)
+
+                    except Exception as e:
+                        print('Artwork could not be downloaded:', e)
+        GObject.idle_add(self.emit, 'album_art_updated', True)
 
     def load_playlists(self):
         self.playlists = self.api.get_all_playlists()
@@ -228,12 +255,27 @@ class GmusicAPI(GObject.GObject):
     def get_album_tracks(self, album_index):
 
         album_title = self.albums[album_index].get('title')
-
         tracks = []
-
         for song in self.library:
             if song.get('album') == album_title:
                 tracks.append(song)
+
+        return tracks
+
+    def get_album_info(self, albumId):
+        ''' get album data and tracks for seached items'''
+        album_info = self.api.get_album_info(albumId, include_tracks=True)
+
+        tracks = []
+        for track in album_info.get('tracks'):
+
+            album_title = track.get("album")
+            album_art_path = self.get_album_art_name(album_title, True)
+
+            track['moozik_id'] = track.get('storeId')
+            track['album_art_path'] = album_art_path
+
+            tracks.append(track)
 
         return tracks
 
@@ -245,9 +287,14 @@ class GmusicAPI(GObject.GObject):
         print('Stream Url',track_url)
         return track_url
 
+    def get_album_from_id(self, albumId):
+        for album in self.albums:
+            if album.get('albumId') == albumId:
+                return album
+
     def get_track_from_id(self, track_id):
         for track in self.library:
-            if track.get('id') == track_id:
+            if track.get('storeId') == track_id:
                 #print('Match:', track_id, track.get('storeId'))
                 return track
         #TODO Handle the stations tracks better. id vs storeId should be transparent

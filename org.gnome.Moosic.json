@@ -19,7 +19,8 @@
         "cflags" : "-O2 -g",
         "cxxflags" : "-O2 -g",
         "env" : {
-            "V" : "1"
+            "V" : "1",
+            "gtk-debug" : "none"
         }
     },
     "cleanup" : [
@@ -230,9 +231,7 @@
                 }
             ]
         },
-
-
-                {
+        {
             "name" : "python3-pychromecast",
             "buildsystem" : "simple",
             "build-options" : {
@@ -244,7 +243,6 @@
                 "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} pychromecast"
             ],
             "sources" : [
-
                 {
                     "type" : "file",
                     "url" : "https://files.pythonhosted.org/packages/1b/90/f531329e628ff34aee79b0b9523196eb7b5b6b398f112bb0c03b24ab1973/protobuf-3.6.1.tar.gz",
@@ -272,8 +270,6 @@
                 }
             ]
         },
-
-
         {
             "name" : "moosic",
             "buildsystem" : "meson",

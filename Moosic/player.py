@@ -60,9 +60,9 @@ class Player(GObject.GObject):
         self.playlist = []
         self.current_playlist_position = -1
 
-    def player_add_to_playlist(self, widget, track_ids):
-        for track_id in track_ids:
-            track = self.gmusic.get_track_from_id(track_id)
+    def player_add_to_playlist(self, widget, tracks):
+        for track in tracks:
+        #track = self.gmusic.get_track_from_id(track_id)
             self.playlist.append(track)
 
         print('playlist updated:', self.playlist)
@@ -130,7 +130,7 @@ class Player(GObject.GObject):
     def player_load_track(self, playlist_position):
         #playlist_index = playlist_position - 1
         track = self.playlist[playlist_position]
-        track_id = track.get('id')
+        track_id = track.get('moozik_id')
         print('Play this track:', track_id)
         #TODO check stream url is valid
         track_url = self.gmusic.get_stream_url(track_id)
@@ -145,18 +145,22 @@ class Player(GObject.GObject):
                 self.current_playlist_position = self.current_playlist_position + 1
                 self.player_load_track(self.current_playlist_position)
 
-    def player_play_single_track(self, sender, track_id):
+    def player_play_single_track(self, sender, track):
         #track = self.gmusic.get_track_from_id(track_id)
-        #print('play:', track.get('title'))
+        print('play:', track)
         self.player_clear_playlist()
-        self.player_add_to_playlist(None, [track_id])
+        self.player_add_to_playlist(None, [track])
         self.player_get_next_track()
 
-    def player_play_queue_track(self, sender, index):
-        print('play queue index:', index)
+    def player_play_queue_track(self, sender, track):
+        print('play queue index:', track.get('title'))
         self.player_stop()
-        self.current_playlist_position = index
-        self.player_load_track(index)
+        for tr in range(len(self.playlist)):
+            if self.playlist[tr] == track:
+                self.current_playlist_position = tr
+                self.player_load_track(tr)
+                break
+
 
     def player_play_radio_station(self, sender, track_id):
         station_tracks = self.gmusic.get_radio_from_track(track_id)

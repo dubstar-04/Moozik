@@ -7,10 +7,10 @@ class ListboxRow(Gtk.EventBox):
 
     __gtype_name__ = 'listbox_row'
 
-    __gsignals__ = {'queue_track_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
+    __gsignals__ = {#'queue_track_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                     'remove_from_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                     'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
-                    'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,)),
+                    'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
                     'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
                     'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
 
@@ -72,7 +72,7 @@ class ListboxRow(Gtk.EventBox):
 
     @Gtk.Template.Callback()
     def add_to_queue_clicked(self, sender, child):
-        self.emit("add_to_queue_signal", [self.track.get('id')])
+        self.emit("add_to_queue_signal", [self.track])
         self.listbox_row_popover.popdown()
 
  #   @Gtk.Template.Callback()
@@ -84,7 +84,7 @@ class ListboxRow(Gtk.EventBox):
 
     @Gtk.Template.Callback()
     def add_to_playlist_clicked(self, sender, child):
-        print('Add to playlist:', self.track.get('title'))
+        print('Add to playlist:', self.track)
         #self.listbox_row_popover.popdown()
 
     @Gtk.Template.Callback()
@@ -98,7 +98,7 @@ class ListboxRow(Gtk.EventBox):
     def playlist_track_selected(self, sender, child):
         print('Track Clicked:', self.track)
         #self.emit("queue_track_selected_signal", self.get_parent().get_index())
-        self.emit("play_track_signal", self.track.get('id'))
+        self.emit("play_track_signal", self.track)
 
     @Gtk.Template.Callback()
     def playlist_view_more_clicked(self, sender, child):

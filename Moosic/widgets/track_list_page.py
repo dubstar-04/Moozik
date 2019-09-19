@@ -24,22 +24,24 @@ class TrackListPage(Gtk.ScrolledWindow):
         self.player = player
         self.playlist_listview.set_header_func(list_header_func, None)
 
-    def populate_listview(self, index):
+    def populate_listview(self, tracks):
 
         for track in self.playlist_listview.get_children():
             self.playlist_listview.remove(track)
 
-        album = self.gmusic.get_album(index)
+        #album_id = tracks[0].get("albumId")
+        #album = self.gmusic.get_album(index)
 
-        album_title = album.get("title")
-        artist = album.get("artist")
-        album_art_path = album.get("album_art_path")
+
+        album_title = tracks[0].get("album")
+        artist = tracks[0].get("albumArtist")
+        album_art_path = tracks[0].get("album_art_path")
 
         self.playlist_album_title.set_text(album_title)
         self.playlist_artist.set_text(artist)
         self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 150, 150))
 
-        tracks = self.gmusic.get_album_tracks(index)
+        #tracks = self.gmusic.get_album_tracks(index)
 
         #TODO sort tracks by album order
         for track in tracks:

@@ -52,14 +52,14 @@ class NowPlayingPage(Gtk.EventBox):
             play_list_track = ListboxRow(track, DnD)
             play_list_track.load_data(track.get('title'), track.get('artist'))
             #TODO player.play_single_track clears the current playlist.
-            play_list_track.connect("queue_track_selected_signal", self.player.player_play_queue_track)
+            play_list_track.connect("play_track_signal", self.player.player_play_queue_track)
             #TODO add to queue makes no sense on the current playlist
             play_list_track.connect("remove_from_queue_signal", self.player.player_remove_from_playlist)
             play_list_track.connect("play_station_signal", self.player.player_play_radio_station)
             play_list_track.connect("reorder_signal", self.player.player_reorder_playlist)
             self.now_playing_listview.add(play_list_track)
 
-            art_list.append(self.gmusic.get_album_art_name(track.get('album')))
+            art_list.append(track.get('album_art_path')) #self.gmusic.get_album_art_name(track.get('album')))
 
         self.set_playlist_art(art_list)
 

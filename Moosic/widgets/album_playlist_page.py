@@ -10,7 +10,7 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
     __gtype_name__ = 'album_playlist_page'
 
-    __gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_INT,)) }
+    __gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)) }
 
     album_flowbox = Gtk.Template.Child()
     album_playlist_loading_spiner = Gtk.Template.Child()
@@ -44,4 +44,7 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
     def album_selected(self, sender, child):
         #print('album clicked:', sender, child)
         print('album_playlist_page:', child.get_index())
-        self.emit("album_selected_signal", child.get_index())
+
+        tracks = self.gmusic.get_album_tracks(child.get_index())
+
+        self.emit("album_selected_signal", tracks)
