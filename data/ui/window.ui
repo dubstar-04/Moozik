@@ -2,6 +2,49 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkAboutDialog" id="about_dialog">
+    <property name="can_focus">False</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">Moozik</property>
+    <property name="version">0.0.1</property>
+    <property name="copyright" translatable="yes">Daniel Wood 2019
+
+Simon Weber -  gmusicapi https://github.com/simon-weber
+Paulus Schoutsen - pychromecast https://github.com/balloob</property>
+    <property name="comments" translatable="yes">Play Music client for GNOME devices</property>
+    <property name="logo_icon_name">image-missing</property>
+    <property name="license_type">gpl-3-0</property>
+    <child>
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkPopoverMenu" id="menu_popover">
     <property name="can_focus">False</property>
     <child>
@@ -10,12 +53,24 @@
         <property name="can_focus">False</property>
         <property name="margin_left">18</property>
         <property name="margin_right">18</property>
-        <property name="margin_top">6</property>
+        <property name="margin_top">5</property>
         <property name="margin_bottom">6</property>
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
-          <placeholder/>
+          <object class="GtkModelButton" id="logout_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">logout</property>
+            <property name="centered">True</property>
+            <signal name="clicked" handler="logout_button_clicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
@@ -25,20 +80,22 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">3</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
-            <property name="label" translatable="yes">About</property>
+          <object class="GtkModelButton" id="show_about_dialog_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="text" translatable="yes">About Moozik</property>
+            <property name="centered">True</property>
+            <signal name="clicked" handler="about_dialog_button_clicked" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">4</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

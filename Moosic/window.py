@@ -50,6 +50,12 @@ class MoosicWindow(Gtk.ApplicationWindow):
     #search_widget_revealer = Gtk.Template.Child()
     play_widget_revealer = Gtk.Template.Child()
 
+    #menu items
+    logout_button = Gtk.Template.Child()
+    show_about_dialog_button = Gtk.Template.Child()
+
+    about_dialog = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -161,5 +167,20 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def album_selected(self, sender, tracks):
         self.track_list_page.populate_listview(tracks)
         self.add_page('track_list_page')
+
+
+    @Gtk.Template.Callback()
+    def about_dialog_button_clicked(self, sender):
+        print('Show About Dialog')
+        self.about_dialog.show()
+
+    @Gtk.Template.Callback()
+    def logout_button_clicked(self, sender):
+        print('Logout button clicked')
+        self.gmusic.logout()
+
+
+
+
 
 

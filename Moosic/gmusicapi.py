@@ -41,6 +41,22 @@ class GmusicAPI(GObject.GObject):
         except OSError as e:
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
+    def logout(self):
+
+        print('gmusic logout')
+
+        try:
+            #delete the temp art_cache
+            shutil.rmtree(self.art_cache(temp=True))
+            shutil.rmtree(self.art_cache(temp=False))
+
+            if os.path.isfile(self.oauth_filename()):
+                os.remove(self.oauth_filename())
+
+        except OSError as e:
+            print ("Error: %s - %s." % (e.filename, e.strerror))
+
+
     def get_oauth_credentials(self):
 
         if os.path.isfile(self.oauth_filename()):
