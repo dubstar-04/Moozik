@@ -5,6 +5,7 @@ import gmusicapi #import Mobileclient
 
 from oauth2client.client import OAuth2WebServerFlow
 import oauth2client.file
+import time
 
 from .widgets import LoginDialog
 from .utils import *
@@ -18,7 +19,8 @@ class GmusicAPI(GObject.GObject):
 
     __gsignals__ =  {'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
                      'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
-                     'album_art_updated' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,))}
+                     'album_art_updated' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
+                     'waiting_for_network' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,))}
 
 
     def __init__(self):
@@ -40,6 +42,7 @@ class GmusicAPI(GObject.GObject):
             print ("Error: %s - %s." % (e.filename, e.strerror))
 
     def get_oauth_credentials(self):
+
         if os.path.isfile(self.oauth_filename()):
             return True
         else:
@@ -58,10 +61,11 @@ class GmusicAPI(GObject.GObject):
                 return False
 
     def log_in(self):
+
         attempts = 0
-        while not self.logged_in and attempts < 3:
+        while not self.logged_in and attempts < 5:
             try:
-                logged_in = self.api.oauth_login(device_id=gmusicapi.Mobileclient.FROM_MAC_ADDRESS, oauth_credentials=self.oauth_filename())
+               self.logged_in = self.api.oauth_login(device_id=gmusicapi.Mobileclient.FROM_MAC_ADDRESS, oauth_credentials=self.oauth_filename())
             except Exception as e:
                 print('login failed', e)
             attempts += 1
@@ -89,15 +93,35 @@ class GmusicAPI(GObject.GObject):
             print ('failed to establish device id')
 
     def load_library(self):
-        self.library = self.api.get_all_songs()
-        self.load_albums()
-        print('API Albums Loaded')
 
-        if len(self.albums):
-            print('Album count :', len(self.albums))
-            self.emit('api_albums_loaded', True)
-            self.load_album_art(self.albums)
+        #check if there is an available network
+        network = network_available()
+        delay_login = not network
 
+        while not network:
+            #TODO stop waiting after x tries - show a reload button on the ui
+            time.sleep(2)
+            network = network_available()
+            self.emit('waiting_for_network', True)
+
+        if delay_login:
+            time.sleep(5)
+            self.emit('waiting_for_network', False)
+
+        if self.get_oauth_credentials():
+            print('Got oauth credentials')
+            if self.log_in():
+                print('logged_in')
+                self.library = self.api.get_all_songs()
+                self.load_albums()
+                print('API Albums Loaded')
+
+                if len(self.albums):
+                    print('Album count :', len(self.albums))
+                    self.emit('api_albums_loaded', True)
+                    self.load_album_art(self.albums)
+        else:
+            print('Failed to get oauth credentials')
         #print(self.library)
 
     def load_albums(self):

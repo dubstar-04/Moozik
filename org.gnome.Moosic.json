@@ -12,6 +12,7 @@
         "--socket=pulseaudio",
         "--filesystem=xdg-run/dconf",
         "--filesystem=~/.config/dconf:ro",
+        "--filesystem=/run/dbus:ro",
         "--talk-name=ca.desrt.dconf",
         "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
     ],
@@ -267,6 +268,32 @@
                     "type" : "file",
                     "url" : "https://files.pythonhosted.org/packages/c0/1a/b594e55ed85942789ceb4233f8cbca946873be5f77a02c1c75ef6944e6fe/zeroconf-0.23.0-py3-none-any.whl",
                     "sha256" : "21d02538ff52fc572e1d785c692b97b8d4374623cb95d593cc06ab92bd5aaf61"
+                }
+            ]
+        },
+        {
+            "name" : "python3-networkmanager",
+            "buildsystem" : "simple",
+            "build-options" : {
+                "build-args" : [
+                    "--share=network",
+                    "--socket=system-bus"
+                ]
+            },
+            "build-commands" : [
+                "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} python-networkmanager"
+            ],
+            "sources" : [
+
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/73/ec/2cc46290cedc99f59df3633d428dfa91d95946ca49af96fdb53514ee195f/python-networkmanager-2.1.tar.gz",
+                    "sha256" : "aef1e34d98d7bec7cc368e0ca0f2e97493f9b5ebe6d7103f8f6460cfca3dc6fc"
+                },
+                {
+                    "type" : "file",
+                    "url" : "https://files.pythonhosted.org/packages/b6/85/7b46d31f15a970665533ad5956adee013f03f0ad4421c3c83304ae9c9906/dbus-python-1.2.12.tar.gz",
+                    "sha256" : "cdd4de2c4f5e58f287b12013ed7b41dee81d503c8d0d2397c5bd2fb01badf260"
                 }
             ]
         },

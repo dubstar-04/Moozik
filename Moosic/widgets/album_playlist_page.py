@@ -14,28 +14,50 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
     album_flowbox = Gtk.Template.Child()
     album_playlist_loading_spiner = Gtk.Template.Child()
+    album_playlist_loading = Gtk.Template.Child()
+    no_network_box = Gtk.Template.Child()
 
     def __init__(self, gmusic):
+
         super().__init__()
 
         self.gmusic = gmusic
+        self.show_loading()
 
-        self.show_loading(True)
+        self.gmusic.connect('waiting_for_network', self.waiting_for_network)
 
-
-    def show_loading(self, state):
-        if state:
-            self.album_flowbox.visible = False
-            self.album_playlist_loading_spiner.visible = True
-            self.album_playlist_loading_spiner.start()
+    def waiting_for_network(self, sender, waiting):
+        print('waiting:', waiting)
+        if waiting:
+            self.show_loading('waiting')
         else:
-            self.album_flowbox.visible = True
-            self.album_playlist_loading_spiner.visible = False
+            self.show_loading()
+
+    def show_loading(self, state='loading'):
+
+        print('show_loading', state)
+
+        if state == 'waiting':
+            self.album_flowbox.set_visible(False)
+            self.no_network_box.set_visible(True)
+            self.album_playlist_loading.set_visible(False)
             self.album_playlist_loading_spiner.stop()
+        if state == 'loading':
+            self.album_flowbox.set_visible(False)
+            self.no_network_box.set_visible(False)
+            self.album_playlist_loading.set_visible(True)
+            self.album_playlist_loading_spiner.start()
+        if state == 'loaded':
+            self.album_flowbox.set_visible(True)
+            self.no_network_box.set_visible(False)
+            self.album_playlist_loading.set_visible(False)
+            self.album_playlist_loading_spiner.stop()
+
+
 
     def populate_album_view(self, sender, child):
         print('Album page: Load Albums')
-        self.show_loading(False)
+        self.show_loading('loaded')
         albums = self.gmusic.get_albums()
         for album in albums:
             GObject.idle_add(self.album_flowbox.add, AlbumWidget(album))

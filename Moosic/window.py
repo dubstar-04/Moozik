@@ -22,7 +22,7 @@ from gi.repository.GdkPixbuf import Pixbuf
 
 #gi.require_version('Handy', '0.0')
 #from gi.repository import Handy
-
+import time
 from threading import Thread
 from threading import Timer
 
@@ -31,6 +31,7 @@ import pychromecast
 from .gmusicapi import *
 from .player import *
 from .settings import *
+from .utils import *
 
 from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage
 
@@ -75,7 +76,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.page_breadcrumbs = []
 
         #connections
-        self.gmusic.connect('api_logged_in', self.load_library)
+        #self.gmusic.connect('api_logged_in', self.load_library)
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
         self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
@@ -84,13 +85,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.search_page.connect("album_selected_signal", self.album_selected)
 
 
-
-        if self.gmusic.get_oauth_credentials():
-            print('Got oauth credentials')
-            if self.gmusic.log_in():
-                print('logged_in')
-        else:
-            print('Failed to get oauth credentials')
+        self.load_library()
 
        # chromecast example
        # chromecasts = pychromecast.get_chromecasts()
@@ -98,8 +93,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
        # for cc in chromecasts:
        #     print('chromecast:', cc.device.friendly_name)
 
-    def load_library(self, sender, data):
-        print('load_library:', 'sender:', sender, 'data:', data)
+    def load_library(self):
+        #print('load_library:', 'sender:', sender, 'data:', data)
         init_thread = Thread(target=self.gmusic.load_library, args=())
         #init_thread.daemon = True
         init_thread.start()

@@ -38,8 +38,9 @@
                       <object class="GtkImage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="pixel_size">75</property>
                         <property name="icon_name">edit-find-symbolic</property>
-                        <property name="icon_size">6</property>
+                        <property name="icon_size">0</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -59,9 +60,6 @@
                         <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                   <packing>
