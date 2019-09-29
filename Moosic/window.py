@@ -84,7 +84,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
         #connections
         #self.gmusic.connect('api_logged_in', self.load_library)
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
-        self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
+        #self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
+        self.gmusic.connect('api_playlists_loaded', self.playlist_page.populate_album_view)
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)

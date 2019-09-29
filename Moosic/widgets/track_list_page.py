@@ -39,7 +39,8 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         self.playlist_album_title.set_text(album_title)
         self.playlist_artist.set_text(artist)
-        self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 150, 150))
+        if os.path.isfile(album_art_path):
+            self.playlist_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 150, 150))
 
         #tracks = self.gmusic.get_album_tracks(index)
 

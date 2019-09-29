@@ -1,4 +1,4 @@
-import gi
+import gi, os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 from gi.repository.GdkPixbuf import Pixbuf
@@ -55,7 +55,8 @@ class PlayBarWidget(Gtk.ActionBar):
         album_art_path = track.get('album_art_path') #self.gmusic.get_album_art_name(track.get('album'))
         #TODO what is the correct artwork size?
         #TODO redesign the playbar so the progress bar is full width
-        self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))
+        if os.path.isfile(album_art_path):
+            self.play_widget_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 30, 30))
         self.play_widget_revealer.set_reveal_child(True)
 
     @Gtk.Template.Callback()

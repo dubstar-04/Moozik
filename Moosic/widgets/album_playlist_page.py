@@ -55,18 +55,19 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
 
 
-    def populate_album_view(self, sender, child):
+    def populate_album_view(self, sender, child, album_data):
         print('Album page: Load Albums')
         self.show_loading('loaded')
-        albums = self.gmusic.get_albums()
+        albums = album_data #self.gmusic.get_albums()
         for album in albums:
             GObject.idle_add(self.album_flowbox.add, AlbumWidget(album))
 
     @Gtk.Template.Callback()
     def album_selected(self, sender, child):
         #print('album clicked:', sender, child)
-        print('album_playlist_page:', child.get_index())
+        print('album_playlist_page - Child Index:', child.get_index())
 
-        tracks = self.gmusic.get_album_tracks(child.get_index())
+        kind = child.get_children()[0].get_kind()
+        tracks = self.gmusic.get_album_tracks(child.get_index(), kind)
 
         self.emit("album_selected_signal", tracks)
