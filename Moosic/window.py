@@ -86,7 +86,9 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
         #self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
         self.gmusic.connect('api_playlists_loaded', self.playlist_page.populate_album_view)
+
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
+
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)
         self.search_page.connect("album_selected_signal", self.album_selected)
@@ -135,6 +137,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def hide_search(self):
         self.search_bar.set_search_mode(False)
         self.search_button.set_active(False)
+        if self.main_stack.get_visible_child_name() == 'search_page':
+            self.page_pop()
 
     def add_page(self, page_name):
         if self.main_stack.get_visible_child_name() != page_name:
@@ -165,8 +169,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
             print('now_playing_page is current page')
             self.now_playing_page.load_current_playlist()
 
-    def album_selected(self, sender, tracks):
-        self.track_list_page.populate_listview(tracks)
+    def album_selected(self, sender, tracks, title):
+        self.track_list_page.populate_listview(tracks, title)
         self.add_page('track_list_page')
 
 

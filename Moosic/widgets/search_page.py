@@ -11,7 +11,7 @@ class SearchPage(Gtk.EventBox):
 
     __gtype_name__ = 'search_page'
 
-    __gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)) }
+    __gsignals__ = {'album_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,GObject.TYPE_PYOBJECT)) }
 
     search_listview = Gtk.Template.Child()
     search_page_placeholder = Gtk.Template.Child()
@@ -32,11 +32,14 @@ class SearchPage(Gtk.EventBox):
 
         if item.get('kind') == 'sj#track':
             self.player.player_play_single_track
+            #TODO: handle playing a single playlist track
+            self.player.player_play_single_track(sender, item)
 
         if item.get('kind') == 'sj#album':
             #print('item_selected:', sender, item)
             tracks = self.gmusic.get_album_info(item.get('album_id'))
-            self.emit("album_selected_signal", tracks)
+            title = item.get("title")
+            self.emit("album_selected_signal", tracks, title)
 
 
     def load_search_results(self):

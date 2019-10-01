@@ -306,7 +306,7 @@ class GmusicAPI(GObject.GObject):
         for album in albums:
             file_path = album.get('album_art_path')
             art_url = album.get('album_art_url')
-            print('art_url:', art_url, 'Path:', file_path)
+            #print('art_url:', art_url, 'Path:', file_path)
             if len(art_url):
                 if not os.path.isfile(file_path):
                     print('file path:', file_path, ' url: ', art_url)

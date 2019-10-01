@@ -34,7 +34,7 @@ class AlbumWidget(Gtk.EventBox):
         self.AlbumTitle_Label.set_text(album_title)
         self.Artist_Label.set_text(artist)
 
-    def get_album_title(self):
+    def get_title(self):
         return self.album.get('title')
 
     def get_kind(self):
