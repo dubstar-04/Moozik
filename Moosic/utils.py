@@ -27,11 +27,11 @@ class Utils:
             dev_type = c('device_type', dev.DeviceType)
             state = c('device_state', dev.State)
 
-            print('network - device:', dev_type, 'state:', state, dev.State)
+            self.debug(['network - device:', dev_type, 'state:', state, dev.State])
 
             if dev_type == 'Modem':
                 # NM_DEVICE_TYPE_MODEM = 8
-                print('Using GSM!!')
+                self.debug(['Using GSM!!'])
 
             if dev.State == 100:
                 #NM_DEVICE_STATE_UNKNOWN = 0
@@ -46,7 +46,7 @@ class Utils:
                 #NM_DEVICE_STATE_SECONDARIES = 90
                 #NM_DEVICE_STATE_ACTIVATED = 100
                 #NM_DEVICE_STATE_DEACTIVATING = 110
-                print('connection available')
+                self.debug(['connection available'])
                 return True
 
         return False
@@ -78,7 +78,7 @@ class Utils:
             shutil.rmtree(log_dir)
             os.makedirs(log_dir, mode=0o755, exist_ok=True)
         except OSError as e:
-            debug(["Error: %s - %s." % (e.filename, e.strerror)])
+            self.debug(["Error: %s - %s." % (e.filename, e.strerror)])
             return None
         else:
             Settings().set_log_file(log_dir)
