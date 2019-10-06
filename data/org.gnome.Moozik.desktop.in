@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=moosic
-Exec=moosic
+Name=moozik
+Exec=moozik
 Terminal=false
 Type=Application
 Categories=GTK;

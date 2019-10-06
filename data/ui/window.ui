@@ -153,7 +153,7 @@ Paulus Schoutsen - pychromecast https://github.com/balloob</property>
       </packing>
     </child>
   </object>
-  <template class="MoosicWindow" parent="GtkApplicationWindow">
+  <template class="MoozikWindow" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="default_width">500</property>
     <property name="default_height">850</property>

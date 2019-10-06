@@ -3,7 +3,7 @@ from gi.repository import Gtk, GObject, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/listbox_row.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/listbox_row.ui')
 class ListboxRow(Gtk.EventBox):
 
     __gtype_name__ = 'listbox_row'

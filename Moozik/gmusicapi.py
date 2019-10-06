@@ -430,7 +430,7 @@ class GmusicAPI(GObject.GObject):
                     return track
 
     def get_radio_from_track(self, track_id):
-        station_name = 'moosic'
+        station_name = 'moozik'
         station_id = self.api.create_station(station_name, track_id, artist_id=None, album_id=None, genre_id=None, playlist_token=None, curated_station_id=None)
         Utils().debug(['station_id:', station_id])
         station_tracks = self.get_station_tracks(station_id)
@@ -455,7 +455,7 @@ class GmusicAPI(GObject.GObject):
     def add_store_track(self):
     def add_store_tracks(self):
     def get_station_track_stream_url(self):
-'''       
+'''
 
 
 

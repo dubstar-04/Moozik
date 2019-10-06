@@ -1,9 +1,9 @@
 {
-    "app-id" : "org.gnome.Moosic",
+    "app-id" : "org.gnome.Moozik",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "3.30",
     "sdk" : "org.gnome.Sdk",
-    "command" : "moosic",
+    "command" : "moozik",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -298,7 +298,7 @@
             ]
         },
         {
-            "name" : "moosic",
+            "name" : "moozik",
             "buildsystem" : "meson",
             "config-opts" : [
                 "--libdir=lib"
@@ -307,7 +307,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/sandal/github/Moosic"
+                    "url" : "file:///home/sandal/github/Moozik"
                 }
             ]
         }

@@ -6,7 +6,7 @@ from ..utils import *
 
 from .albumWidget import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/album_playlist_page.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/album_playlist_page.ui')
 class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
     __gtype_name__ = 'album_playlist_page'

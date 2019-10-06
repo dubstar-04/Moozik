@@ -1,9 +1,9 @@
-project('Moosic',
+project('Moozik',
 	version: '0.1.0',
   	meson_version: '>= 0.40.0',
 )
 
-application_id = 'org.gnome.Moosic'
+application_id = 'org.gnome.Moozik'
 
 i18n   = import('i18n')
 python = import('python3')
@@ -43,16 +43,15 @@ dependency('gstreamer-player-1.0', version: '>= 1.12')
 dependency('gstreamer-plugins-base-1.0', version: '>= 1.12')
 dependency('gstreamer-plugins-bad-1.0', version: '>= 1.12')
 dependency('gstreamer-bad-audio-1.0', version: '>= 1.12')
-dependency('gstreamer-bad-video-1.0', version: '>= 1.12')
 
 install_subdir(
-  'Moosic',
+  'Moozik',
   install_dir: PYTHON_DIR
 )
 
 configure_file(
-  input: 'moosic.py.in',
-  output: 'moosic',
+  input: 'moozik.py.in',
+  output: 'moozik',
   configuration: conf,
   install_dir: BIN_DIR
 )

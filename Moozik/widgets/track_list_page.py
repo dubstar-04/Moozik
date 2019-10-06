@@ -6,7 +6,7 @@ from .listbox_row import *
 
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/track_list_page.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/track_list_page.ui')
 class TrackListPage(Gtk.ScrolledWindow):
 
     __gtype_name__ = 'track_list_page'

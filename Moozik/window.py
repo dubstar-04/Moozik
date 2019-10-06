@@ -35,9 +35,9 @@ from .utils import *
 
 from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/window.ui')
-class MoosicWindow(Gtk.ApplicationWindow):
-    __gtype_name__ = 'MoosicWindow'
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/window.ui')
+class MoozikWindow(Gtk.ApplicationWindow):
+    __gtype_name__ = 'MoozikWindow'
 
     #TODO: change all member variables to _member
     main_stack = Gtk.Template.Child()

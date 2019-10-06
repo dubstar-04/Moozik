@@ -4,7 +4,7 @@ from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/albumWidget.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/albumWidget.ui')
 class AlbumWidget(Gtk.EventBox):
 
     __gtype_name__ = 'albumWidget'

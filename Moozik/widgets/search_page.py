@@ -6,7 +6,7 @@ from .listbox_row import *
 
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/search_page.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/search_page.ui')
 class SearchPage(Gtk.EventBox):
 
     __gtype_name__ = 'search_page'

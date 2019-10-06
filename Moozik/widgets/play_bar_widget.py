@@ -4,7 +4,7 @@ from gi.repository import Gtk, GObject
 from gi.repository.GdkPixbuf import Pixbuf
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/play_bar_widget.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/play_bar_widget.ui')
 class PlayBarWidget(Gtk.ActionBar):
 
     __gtype_name__ = 'play_bar_widget'

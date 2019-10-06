@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# moosic.py.in
+# moozik.py.in
 #
 # Copyright 2018 Dubstar_04
 #
@@ -22,7 +22,7 @@ import sys
 from os import path
 
 sys.path.insert(1, '@PYTHON_DIR@')
-sys.path.append(path.join("@LIBDIR@", 'moosic/python'))
+sys.path.append(path.join("@LIBDIR@", 'moozik/python'))
 
 import gi, os
 from gi.repository import Gio
@@ -32,41 +32,15 @@ from gi.repository import Gio
 
 if __name__ == "__main__":
 
-    locale.bindtextdomain('org.gnome.Moosic', '@LOCALE_DIR@')
-    locale.textdomain('org.gnome.Moosic')
-    gettext.bindtextdomain('org.gnome.Moosic', '@LOCALE_DIR@')
-    gettext.textdomain('org.gnome.Moosic')
+    locale.bindtextdomain('org.gnome.Moozik', '@LOCALE_DIR@')
+    locale.textdomain('org.gnome.Moozik')
+    gettext.bindtextdomain('org.gnome.Moozik', '@LOCALE_DIR@')
+    gettext.textdomain('org.gnome.Moozik')
 
-    #sys.path.insert(1, pkgdatadir)
-    #signal.signal(signal.SIGINT, signal.SIG_DFL)
-    #gettext.install('moosic', '@LOCALE_DIR@')
-
-
-    #resource = Gio.resource_load(path.join('@DATA_DIR@','@PROJECT_NAME@.gresource'))
     resource = Gio.Resource.load(os.path.join('@DATA_DIR@', '@PROJECT_NAME@.gresource'))
     Gio.Resource._register(resource)
 
-
-    #Gst.init(sys.argv)
-    #res, sys.argv = GES.init_check(sys.argv)
-    '''
-    from AudioCutter.application import Application
-    try:
-        app = Application()
-        exit_status = app.run(sys.argv)
-        sys.exit(exit_status)
-    except KeyboardInterrupt:
-        exit()
-
-    if __name__ == '__main__':
-    import gi
-
-    from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'moosic.gresource'))
-    resource._register()
-    '''
-
-    from Moosic import main
+    from Moozik import main
     sys.exit(main.main('@VERSION@'))
 
 

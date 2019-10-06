@@ -65,7 +65,7 @@ class Player(GObject.GObject):
         #track = self.gmusic.get_track_from_id(track_id)
             self.playlist.append(track)
 
-        Utils().debug('playlist updated:', self.playlist)
+        Utils().debug(['playlist updated:', self.playlist])
 
     def player_remove_from_playlist(self, widget, index):
         self.playlist.pop(index)
@@ -75,7 +75,7 @@ class Player(GObject.GObject):
     def player_reorder_playlist(self, sender, indices):
         source_row = indices[0]
         destination_row = indices[1]
-        Utils().debug('Player_reorder_playlist - move row:', source_row  ,'to row:', destination_row)
+        Utils().debug(['Player_reorder_playlist - move row:', source_row  ,'to row:', destination_row])
 
         if source_row < destination_row:
             self.playlist.insert(destination_row + 1, self.playlist[source_row])
@@ -88,7 +88,7 @@ class Player(GObject.GObject):
 
     def player_get_playlist(self):
         return self.playlist
-    
+
     def player_get_playing_track(self):
         return self.playlist[self.current_playlist_position]
 
@@ -100,22 +100,22 @@ class Player(GObject.GObject):
         elif t == Gst.MessageType.ERROR:
             self.player.set_state(Gst.State.NULL)
             err, debug = message.parse_error()
-            Utils().debug("Error: %s" % err, debug)
+            Utils().debug(["Error: %s" % err, debug])
 
     def player_get_state(self):
         return self.state
 
 
     def player_seek(self, seek_position):
-        Utils().debug('player_seek:', seek_position, 'duration:', self.duration)
+        Utils().debug(['player_seek:', seek_position, 'duration:', self.duration])
         self.player.seek_simple(Gst.Format.TIME,  Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, seek_position * Gst.SECOND)
 
     def player_update_progress(self):
         #https://github.com/hadware/gstreamer-python-player/blob/master/seek.py
         success, state, pending = self.player.get_state(Gst.CLOCK_TIME_NONE)
-        #Utils().debug('player state:', state)
+        #Utils().debug(['player state:', state])
         if state == Gst.State.NULL:
-            Utils().debug('Timer Stopped')
+            Utils().debug(['Timer Stopped'])
             self.player_get_next_track()
             return False
         else:
@@ -123,7 +123,7 @@ class Player(GObject.GObject):
             self.duration = track_duration / Gst.SECOND
             success, position = self.player.query_position(Gst.Format.TIME)
             self.progress = position / Gst.SECOND
-            #Utils().debug('Player_progress:', self.progress, self.duration)
+            #Utils().debug(['Player_progress:', self.progress, self.duration])
             self.emit("player_progress_change_signal", self.progress)
             return True
 
@@ -131,7 +131,7 @@ class Player(GObject.GObject):
         #playlist_index = playlist_position - 1
         track = self.playlist[playlist_position]
         track_id = track.get('moozik_id')
-        Utils().debug('Play this track:', track_id)
+        Utils().debug(['Play this track:', track_id])
         #TODO check stream url is valid
         track_url = self.gmusic.get_stream_url(track_id)
         self.player.set_property('uri', track_url)
@@ -147,13 +147,13 @@ class Player(GObject.GObject):
 
     def player_play_single_track(self, sender, track):
         #track = self.gmusic.get_track_from_id(track_id)
-        Utils().debug('play:', track)
+        Utils().debug(['play:', track])
         self.player_clear_playlist()
         self.player_add_to_playlist(None, [track])
         self.player_get_next_track()
 
     def player_play_queue_track(self, sender, track):
-        Utils().debug('play queue index:', track.get('title'))
+        Utils().debug(['play queue index:', track.get('title')])
         self.player_stop()
         for tr in range(len(self.playlist)):
             if self.playlist[tr] == track:
@@ -168,7 +168,7 @@ class Player(GObject.GObject):
 
         track_ids = []
         for track in station_tracks:
-            Utils().debug('player_radio_station_track:', track.get('storeId'))
+            Utils().debug(['player_radio_station_track:', track.get('storeId')])
             track_ids.append(track.get('storeId'))
 
         self.player_add_to_playlist(None, track_ids)

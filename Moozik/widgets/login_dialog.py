@@ -5,7 +5,7 @@ from ..utils import *
 
 import webbrowser
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/login_dialog.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/login_dialog.ui')
 class LoginDialog(Gtk.Dialog):
 
     code_entry = Gtk.Template.Child()

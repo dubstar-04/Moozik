@@ -1,6 +1,6 @@
-data/org.gnome.Moosic.desktop.in
-data/org.gnome.Moosic.appdata.xml.in
-data/org.gnome.Moosic.gschema.xml
+data/org.gnome.Moozik.desktop.in
+data/org.gnome.Moozik.appdata.xml.in
+data/org.gnome.Moozik.gschema.xml
 src/window.ui
 src/main.py
 src/window.py

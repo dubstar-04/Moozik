@@ -1,1 +1,1 @@
-i18n.gettext('moosic', preset: 'glib')
+i18n.gettext('moozik', preset: 'glib')

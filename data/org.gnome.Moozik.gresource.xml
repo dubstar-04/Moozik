@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/gnome/Moosic">
+  <gresource prefix="/org/gnome/Moozik">
     <file>ui/window.ui</file>
     <file>ui/albumWidget.ui</file>
     <file>ui/listbox_row.ui</file>

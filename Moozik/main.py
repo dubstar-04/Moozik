@@ -21,17 +21,17 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio
 
-from .window import MoosicWindow
+from .window import MoozikWindow
 
 class Application(Gtk.Application):
     def __init__(self):
-        super().__init__(application_id='org.gnome.Moosic',
+        super().__init__(application_id='org.gnome.Moozik',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
 
     def do_activate(self):
         win = self.props.active_window
         if not win:
-            win = MoosicWindow(application=self)
+            win = MoozikWindow(application=self)
         win.present()
 
 

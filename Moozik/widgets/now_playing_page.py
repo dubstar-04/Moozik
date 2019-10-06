@@ -6,7 +6,7 @@ from .listbox_row import *
 
 from ..utils import *
 
-@Gtk.Template(resource_path='/org/gnome/Moosic/ui/now_playing_page.ui')
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/now_playing_page.ui')
 class NowPlayingPage(Gtk.EventBox):
 
     __gtype_name__ = 'now_playing_page'
