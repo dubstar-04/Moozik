@@ -7,7 +7,7 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,_
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -53,7 +53,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
     #menu items
     logout_button = Gtk.Template.Child()
     show_about_dialog_button = Gtk.Template.Child()
-
+    debug_toggle = Gtk.Template.Child()
     about_dialog = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
@@ -62,6 +62,8 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.settings = Settings()
         self.gmusic = GmusicAPI()
         self.player = Player(self.gmusic)
+        #delete any previous logs and get the log file path
+        Utils().create_log_file()
 
         self.album_page = AlbumPlaylistPage(self.gmusic)
         self.playlist_page = AlbumPlaylistPage(self.gmusic)
@@ -93,6 +95,10 @@ class MoosicWindow(Gtk.ApplicationWindow):
         self.playlist_page.connect("album_selected_signal", self.album_selected)
         self.search_page.connect("album_selected_signal", self.album_selected)
 
+        #self.settings.set_Utils().debug(False) #set default state
+        self.debug_toggle.connect('state-set', self.settings.set_debug)
+        self.debug_toggle.set_state(self.settings.get_debug())
+
 
         self.load_library()
 
@@ -100,10 +106,10 @@ class MoosicWindow(Gtk.ApplicationWindow):
        # chromecasts = pychromecast.get_chromecasts()
        #
        # for cc in chromecasts:
-       #     print('chromecast:', cc.device.friendly_name)
+       #     Utils().debug('chromecast:', cc.device.friendly_name)
 
     def load_library(self):
-        #print('load_library:', 'sender:', sender, 'data:', data)
+        #Utils().debug('load_library:', 'sender:', sender, 'data:', data)
         init_thread = Thread(target=self.gmusic.load_library, args=())
         #init_thread.daemon = True
         init_thread.start()
@@ -119,10 +125,10 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def search_button_pressed(self, sender, data):
-        print("show search", data)
+        Utils().debug(["some text", data])
         current_page = self.add_page('search_page')
         if current_page:
-            print('search_page is current page')
+            Utils().debug(['search_page is current page'])
             show_search = not self.search_bar.get_search_mode()
             self.search_bar.set_search_mode(show_search)
         else:
@@ -153,11 +159,11 @@ class MoosicWindow(Gtk.ApplicationWindow):
             return False
 
     def page_pop(self):
-        print(self.page_breadcrumbs)
+        Utils().debug([self.page_breadcrumbs])
         if len(self.page_breadcrumbs):
             self.main_stack.set_visible_child_name(self.page_breadcrumbs[-1])
             self.page_breadcrumbs.pop(-1)
-            print(self.page_breadcrumbs)
+            Utils().debug([self.page_breadcrumbs])
 
         if not len(self.page_breadcrumbs):
             self.stack_switcher.set_visible(True)
@@ -166,7 +172,7 @@ class MoosicWindow(Gtk.ApplicationWindow):
     def show_now_playing_page(self, sender, data):
         current_page = self.add_page('now_playing_page')
         if current_page:
-            print('now_playing_page is current page')
+            Utils().debug(['now_playing_page is current page'])
             self.now_playing_page.load_current_playlist()
 
     def album_selected(self, sender, tracks, title):
@@ -176,12 +182,12 @@ class MoosicWindow(Gtk.ApplicationWindow):
 
     @Gtk.Template.Callback()
     def about_dialog_button_clicked(self, sender):
-        print('Show About Dialog')
+        Utils().debug(['Show About Dialog'])
         self.about_dialog.show()
 
     @Gtk.Template.Callback()
     def logout_button_clicked(self, sender):
-        print('Logout button clicked')
+        Utils().debug(['Logout button clicked'])
         self.gmusic.logout()
 
 

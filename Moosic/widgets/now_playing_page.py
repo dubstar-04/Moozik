@@ -22,7 +22,7 @@ class NowPlayingPage(Gtk.EventBox):
 
         self.player = player
         self.gmusic = gmusic
-        self.now_playing_listview.set_header_func(list_header_func, None)
+        self.now_playing_listview.set_header_func(Utils().list_header_func, None)
 
         self.player.connect("player_playlist_updated_signal", self.update_playlist)
 
@@ -48,7 +48,7 @@ class NowPlayingPage(Gtk.EventBox):
         DnD = True
 
         for track in tracks:
-            #print(track)
+            #Utils().debug([track])
             play_list_track = ListboxRow(track, DnD)
             play_list_track.load_data(track.get('title'), track.get('artist'))
             #TODO player.play_single_track clears the current playlist.

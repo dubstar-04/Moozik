@@ -41,11 +41,11 @@ class GmusicAPI(GObject.GObject):
             #delete the temp art_cache
             shutil.rmtree(self.art_cache(temp=True))
         except OSError as e:
-            print ("Error: %s - %s." % (e.filename, e.strerror))
+            Utils().debug(["Error: %s - %s." % (e.filename, e.strerror)])
 
     def logout(self):
 
-        print('gmusic logout')
+        Utils().debug(['gmusic logout'])
 
         try:
             #delete the temp art_cache
@@ -56,7 +56,7 @@ class GmusicAPI(GObject.GObject):
                 os.remove(self.oauth_filename())
 
         except OSError as e:
-            print ("Error: %s - %s." % (e.filename, e.strerror))
+            debug (["Error: %s - %s." % (e.filename, e.strerror)])
 
 
     def get_oauth_credentials(self):
@@ -66,7 +66,7 @@ class GmusicAPI(GObject.GObject):
         else:
             flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
             auth_uri = flow.step1_get_authorize_url()
-            print('Auth URI', auth_uri)
+            Utils().debug(['Auth URI', auth_uri])
             login_dialog = LoginDialog(auth_uri)
             login_dialog.run()
             code = login_dialog.get_code()
@@ -85,7 +85,7 @@ class GmusicAPI(GObject.GObject):
             try:
                self.logged_in = self.api.oauth_login(device_id=gmusicapi.Mobileclient.FROM_MAC_ADDRESS, oauth_credentials=self.oauth_filename())
             except Exception as e:
-                print('login failed', e)
+                Utils().debug(['login failed', e])
             attempts += 1
 
         if not self.api.is_authenticated():
@@ -108,12 +108,12 @@ class GmusicAPI(GObject.GObject):
         if len(device_id):
             return device_id
         else:
-            print ('failed to establish device id')
+            debug (['failed to establish device id'])
 
     def load_library(self):
 
         #check if there is an available network
-        network = network_available()
+        network = Utils().network_available()
         delay_login = not network
 
         while not network:
@@ -127,27 +127,26 @@ class GmusicAPI(GObject.GObject):
             self.emit('waiting_for_network', False)
 
         if self.get_oauth_credentials():
-            print('Got oauth credentials')
+            Utils().debug(['Got oauth credentials'])
             if self.log_in():
-                print('logged_in')
+                Utils().debug(['logged_in'])
                 self.library = self.api.get_all_songs()
                 self.load_albums()
-                print('API Albums Loaded')
+                Utils().debug(['API Albums Loaded'])
                 self.playlist_data = self.api.get_all_user_playlist_contents()
                 self.load_playlists()
 
 
                 if len(self.albums):
-                    print('Album count :', len(self.albums))
+                    Utils().debug(['Album count :', len(self.albums)])
                     self.emit('api_albums_loaded', True, self.albums)
                     self.load_album_art(self.albums)
                 if len(self.playlists):
-                    print('Playlist count :', len(self.playlists))
+                    Utils().debug(['Playlist count :', len(self.playlists)])
                     self.emit('api_playlists_loaded', True, self.playlists)
                     self.load_album_art(self.playlists)
         else:
-            print('Failed to get oauth credentials')
-        #print(self.library)
+            Utils().debug(['Failed to get oauth credentials'])
 
     def load_albums(self):
         missing_art_count = 0
@@ -174,7 +173,7 @@ class GmusicAPI(GObject.GObject):
             if not any(album.get('title', None) == album_title for album in self.albums):
                 self.albums.append(album)
 
-        print('Missing Album Art:', missing_art_count)
+        Utils().debug(['Missing Album Art:', missing_art_count])
 
     def load_playlists(self):
         missing_art_count = 0
@@ -182,8 +181,6 @@ class GmusicAPI(GObject.GObject):
         #playlists = self.api.get_all_user_playlist_contents()
 
         for playlist in self.playlist_data:
-            #print('\nPlaylist:', playlist.get('name'))
-            #print(playlist)
             album_title = playlist.get("name")
             album_id = playlist.get("playlistId")
             artist = playlist.get("ownerName")
@@ -227,14 +224,14 @@ class GmusicAPI(GObject.GObject):
                         track['album'] = 'album error'
 
                 except:
-                    print('load_playlists: track error')
+                    Utils().debug(['load_playlists: track error'])
 
             #add playlist to self.playlists
             pl = {'kind': 'playlist', 'title':album_title, 'album_id':album_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
             self.playlists.append(pl)
 
 
-        print('Missing Playlist Art:', missing_art_count)
+        Utils().debug(['Missing Playlist Art:', missing_art_count])
 
 
     def search_library(self, search_query):
@@ -249,7 +246,7 @@ class GmusicAPI(GObject.GObject):
                         for entry in data:
                             for key, value in entry.items():
                                 if key == 'album' or key == 'track':
-                                    print('data:', value)
+                                    Utils().debug(['data:', value])
 
                                     item = value
 
@@ -277,7 +274,7 @@ class GmusicAPI(GObject.GObject):
                                         else:
                                             album_art_url = item.get("albumArtRef")[0].get("url")
                                     except Exception:
-                                        #print('no album art available')
+                                        #Utils().debug(['no album art available'])
                                         pass
 
                                     item_data = {'kind': item.get('kind'), 'title':album_title, 'album':album, 'album_id':album_id, 'storeId':store_id, 'moozik_id':store_id, 'artist':artist, 'album_art_url':album_art_url, 'album_art_path': album_art_path}
@@ -306,15 +303,15 @@ class GmusicAPI(GObject.GObject):
         for album in albums:
             file_path = album.get('album_art_path')
             art_url = album.get('album_art_url')
-            #print('art_url:', art_url, 'Path:', file_path)
+            #Utils().debug(['art_url:', art_url, 'Path:', file_path])
             if len(art_url):
                 if not os.path.isfile(file_path):
-                    print('file path:', file_path, ' url: ', art_url)
+                    Utils().debug(['file path:', file_path, ' url: ', art_url])
                     try:
                         urllib.request.urlretrieve(art_url, file_path)
 
                     except Exception as e:
-                        print('Artwork could not be downloaded:', e)
+                        Utils().debug(['Artwork could not be downloaded:', e])
         GObject.idle_add(self.emit, 'album_art_updated', True)
 
     def get_library(self):
@@ -352,7 +349,7 @@ class GmusicAPI(GObject.GObject):
             return cache_dir
 
     def get_album_art_name(self, album_title, temp=False):
-        album_title = slugify(album_title)
+        album_title = Utils().slugify(album_title)
         return self.art_cache(temp) + '/' + album_title + '.jpg'
 
     def get_album(self, album_index):
@@ -371,21 +368,21 @@ class GmusicAPI(GObject.GObject):
         if kind == 'playlist':
             album_title = self.playlist_data[album_index].get('name')
 
-            print('Playlist Selected:', album_title)
+            Utils().debug(['Playlist Selected:', album_title])
             playlist_tracks = self.playlist_data[album_index].get('tracks')
 
-            #print('playlist:', playlist_tracks)
+            #Utils().debug(['playlist:', playlist_tracks])
 
             for track in playlist_tracks:
                 try:
-                    #print(track.get('track').get('title'))
+                    #Utils().debug(track.get('track').get('title'))
                     tracks.append(track.get('track'))
                 except:
-                    print('Track Error')
+                    Utils().debug(['Track Error'])
 
 
             #for song in self.playlist_data[album_index]:
-                #print (song.get('playlistId'), album_title)
+                #debug ([song.get('playlistId'), album_title])
                 #if song.get('playlistId') == album_title:
                 #    tracks.append(song)
 
@@ -413,7 +410,7 @@ class GmusicAPI(GObject.GObject):
         #TODO check the track_id exists?
         #TODO check the device_id isnt null
         track_url = self.api.get_stream_url(track_id, self.device_id)
-        print('Stream Url',track_url)
+        Utils().debug(['Stream Url',track_url])
         return track_url
 
     def get_album_from_id(self, albumId):
@@ -424,7 +421,7 @@ class GmusicAPI(GObject.GObject):
     def get_track_from_id(self, track_id):
         for track in self.library:
             if track.get('storeId') == track_id:
-                #print('Match:', track_id, track.get('storeId'))
+                #Utils().debug(['Match:', track_id, track.get('storeId')])
                 return track
         #TODO Handle the stations tracks better. id vs storeId should be transparent
         if self.station_tracks:
@@ -435,7 +432,7 @@ class GmusicAPI(GObject.GObject):
     def get_radio_from_track(self, track_id):
         station_name = 'moosic'
         station_id = self.api.create_station(station_name, track_id, artist_id=None, album_id=None, genre_id=None, playlist_token=None, curated_station_id=None)
-        print('station_id:', station_id)
+        Utils().debug(['station_id:', station_id])
         station_tracks = self.get_station_tracks(station_id)
         return station_tracks
 
@@ -443,7 +440,7 @@ class GmusicAPI(GObject.GObject):
         #TODO impliment station_id 'IFL' for the “I’m Feeling Lucky” station.
         #station_id = 'IFL'
         self.station_tracks = self.api.get_station_tracks(station_id, num_tracks=20, recently_played_ids=None)
-        print('radio station tracks:', len(self.station_tracks))
+        Utils().debug(['radio station tracks:', len(self.station_tracks)])
         return self.station_tracks
 
 

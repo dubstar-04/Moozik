@@ -1,6 +1,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
+from ..utils import *
 
 import webbrowser
 
@@ -23,7 +24,7 @@ class LoginDialog(Gtk.Dialog):
 
     @Gtk.Template.Callback()
     def apply_clicked(self, sender):
-        print(self.code_entry.get_text())
+        Utils().debug([self.code_entry.get_text()])
         self.code = self.code_entry.get_text()
         self.close()
 
@@ -33,7 +34,7 @@ class LoginDialog(Gtk.Dialog):
 
     @Gtk.Template.Callback()
     def on_response(self, sender, response):
-        print('response')
+        Utils().debug(['response'])
 
     def get_code(self):
         return self.code

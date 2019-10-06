@@ -30,6 +30,27 @@ class Settings:
         device_id = self.settings.get_string('device-id')
         return device_id
 
+    def set_show_welcome(self, show_welcome):
+        self.settings.set_string('show-welcome', show_welcome)
+
+    def show_welcome(self):
+        show_welcome = self.settings.get_string('show-welcome')
+        return show_welcome
+
+    def set_debug(self, sender, debug):
+        self.settings.set_boolean('debug', debug)
+
+    def get_debug(self):
+        debug = self.settings.get_boolean('debug')
+        return debug
+
+    def set_log_file(self, log_file):
+        self.settings.set_string('log-file', log_file)
+
+    def get_log_file(self):
+        log_file = self.settings.get_string('log-file')
+        return log_file
+
     def get_settings_obj(self):
         return self.settings
         

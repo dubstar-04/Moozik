@@ -1,6 +1,7 @@
 import os, gi, cairo
 from gi.repository import Gtk, GObject, Gdk
 from gi.repository.GdkPixbuf import Pixbuf
+from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/listbox_row.ui')
 class ListboxRow(Gtk.EventBox):
@@ -45,10 +46,10 @@ class ListboxRow(Gtk.EventBox):
 
 
     def on_drag_begin(self, widget, drag_context):
-        print('drag-begin')
-        #print('widget:', widget, 'drag_context:', drag_context)
+        Utils().debug(['drag-begin'])
+        #Utils().debug(['widget:', widget, 'drag_context:', drag_context])
         listbox_row = self.get_parent()
-        print('listbox_row:', listbox_row)
+        Utils().debug(['listbox_row:', listbox_row])
         allocation = listbox_row.get_allocation()
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, allocation.width, allocation.height)
         cr = cairo.Context(surface)
@@ -59,15 +60,15 @@ class ListboxRow(Gtk.EventBox):
         #Gtk.StyleContext.remove_class (context, "drag-icon")
 
     def on_drag_data_get(self, widget, drag_context, data, info, time):
-        print('drag-data-get')
+        Utils().debug(['drag-data-get'])
         index = self.get_parent().get_index()
         data.set(Gdk.Atom.intern_static_string('Gtk.ListBoxRow'), 32, [index])
 
     def on_drag_data_received(self, widget, drag_context, x,y, data,info, time):
-        print('drag-data-received')
+        Utils().debug(['drag-data-received'])
         source_index = data.get_data()[0]
         target_index = widget.get_parent().get_index()
-        print('source_index:', source_index, 'target_index:', target_index)
+        Utils().debug(['source_index:', source_index, 'target_index:', target_index])
         self.emit("reorder_signal", [source_index, target_index])
 
     @Gtk.Template.Callback()
@@ -77,32 +78,32 @@ class ListboxRow(Gtk.EventBox):
 
  #   @Gtk.Template.Callback()
  #   def remove_from_queue_clicked(self, sender, child):
- #       print(sender, child)
- #       print('Remove From Queue clicked - Index:', self.get_parent().get_index())
+ #       Utils().debug([sender, child])
+ #       Utils().debug(['Remove From Queue clicked - Index:', self.get_parent().get_index()])
  #       self.listbox_row_popover.popdown()
  #       self.emit("remove_from_queue_signal", self.get_parent().get_index())
 
     @Gtk.Template.Callback()
     def add_to_playlist_clicked(self, sender, child):
-        print('Add to playlist:', self.track)
+        Utils().debug(['Add to playlist:', self.track])
         #self.listbox_row_popover.popdown()
 
     @Gtk.Template.Callback()
     def start_radio_clicked(self, sender, child):
-        print('start radio:', self.track.get('title'))
+        Utils().debug(['start radio:', self.track.get('title')])
         self.listbox_row_popover.popdown()
         self.emit("play_station_signal", [self.track.get('id')])
 
 
     @Gtk.Template.Callback()
     def playlist_track_selected(self, sender, child):
-        print('Track Clicked:', self.track)
+        Utils().debug(['Track Clicked:', self.track])
         #self.emit("queue_track_selected_signal", self.get_parent().get_index())
         self.emit("play_track_signal", self.track)
 
     @Gtk.Template.Callback()
     def playlist_view_more_clicked(self, sender, child):
-        print("Playlist More Clicked")
+        Utils().debug(["Playlist More Clicked"])
         self.listbox_row_popover.popup()
 
     def load_data(self, title, subtitle):

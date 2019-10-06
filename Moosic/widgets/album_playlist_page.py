@@ -2,6 +2,7 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 from gi.repository.GdkPixbuf import Pixbuf
+from ..utils import *
 
 from .albumWidget import *
 
@@ -27,7 +28,7 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
         self.gmusic.connect('waiting_for_network', self.waiting_for_network)
 
     def waiting_for_network(self, sender, waiting):
-        print('waiting:', waiting)
+        Utils().debug(['waiting:', waiting])
         if waiting:
             self.show_loading('waiting')
         else:
@@ -35,7 +36,7 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
     def show_loading(self, state='loading'):
 
-        print('show_loading', state)
+        Utils().debug(['show_loading', state])
 
         if state == 'waiting':
             self.album_flowbox.set_visible(False)
@@ -56,7 +57,7 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
 
     def populate_album_view(self, sender, child, album_data):
-        print('Album page: Load Albums')
+        Utils().debug(['Album page: Load Albums'])
         self.show_loading('loaded')
         albums = album_data #self.gmusic.get_albums()
         for album in albums:
@@ -64,8 +65,8 @@ class AlbumPlaylistPage(Gtk.ScrolledWindow):
 
     @Gtk.Template.Callback()
     def album_selected(self, sender, child):
-        #print('album clicked:', sender, child)
-        print('album_playlist_page - Child Index:', child.get_index())
+        #Utils().debug(['album clicked:', sender, child])
+        Utils().debug(['album_playlist_page - Child Index:', child.get_index()])
 
         kind = child.get_children()[0].get_kind()
         title = child.get_children()[0].get_title()

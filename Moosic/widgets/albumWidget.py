@@ -1,8 +1,8 @@
-import gi
+import gi, os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository.GdkPixbuf import Pixbuf
-import os
+from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/albumWidget.ui')
 class AlbumWidget(Gtk.EventBox):
@@ -41,5 +41,5 @@ class AlbumWidget(Gtk.EventBox):
         return self.album.get('kind')
 
     def album_selected(self, sender, child):
-        print('album_widget_pressed:')
+        Utils().debug('album_widget_pressed:')
         #self.emit("album_selected_signal", [self.track.get('id')])

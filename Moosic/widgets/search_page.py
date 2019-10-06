@@ -25,7 +25,7 @@ class SearchPage(Gtk.EventBox):
         self.gmusic.connect('album_art_updated', self.update_album_art)
 
     def update_album_art(self, sender, data):
-        #print('search_page: update album art', sender, data)
+        #Utils().debug(['search_page: update album art', sender, data])
         self.load_search_results()
 
     def item_selected(self, sender, item):
@@ -36,7 +36,7 @@ class SearchPage(Gtk.EventBox):
             self.player.player_play_single_track(sender, item)
 
         if item.get('kind') == 'sj#album':
-            #print('item_selected:', sender, item)
+            #Utils().debug(['item_selected:', sender, item])
             tracks = self.gmusic.get_album_info(item.get('album_id'))
             title = item.get("title")
             self.emit("album_selected_signal", tracks, title)

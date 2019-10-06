@@ -22,7 +22,7 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         self.gmusic = gmusic
         self.player = player
-        self.playlist_listview.set_header_func(list_header_func, None)
+        self.playlist_listview.set_header_func(Utils().list_header_func, None)
 
     def populate_listview(self, tracks, title):
 

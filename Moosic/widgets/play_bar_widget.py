@@ -2,6 +2,7 @@ import gi, os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, GObject
 from gi.repository.GdkPixbuf import Pixbuf
+from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moosic/ui/play_bar_widget.ui')
 class PlayBarWidget(Gtk.ActionBar):
@@ -29,18 +30,18 @@ class PlayBarWidget(Gtk.ActionBar):
         self.playwidget_slider_handler_id = self.playwidget_slider.connect("value-changed", self.track_seek)
 
     def handle_player_states(self, sender, state):
-        print('update_play_bar:', sender, state)
+        Utils().debug(['update_play_bar:', sender, state])
         player_state = self.player.player_get_state().value
-        print('player state:', player_state)
+        Utils().debug(['player state:', player_state])
 
         if player_state == 1:
-            print('player is stopped')
+            Utils().debug(['player is stopped'])
             self.player_stopped_state()
         elif player_state == 2:
-            print('player is playing')
+            Utils().debug(['player is playing'])
             self.player_playing_state()
         elif player_state == 3:
-            print('player is paused')
+            Utils().debug(['player is paused'])
             self.player_paused_state()
 
     def player_stopped_state(self):
@@ -63,13 +64,13 @@ class PlayBarWidget(Gtk.ActionBar):
     def play_pause(self, widget):
         player_state = self.player.player_get_state().value
         if player_state == 1:
-            print('player is stopped')
+            Utils().debug(['player is stopped'])
             self.player.player_play()
         elif player_state == 2:
-            print('player is playing')
+            Utils().debug(['player is playing'])
             self.player.player_pause()
         elif player_state == 3:
-            print('player is paused')
+            Utils().debug(['player is paused'])
             self.player.player_play()
 
     def track_seek(self, widget):
@@ -86,7 +87,7 @@ class PlayBarWidget(Gtk.ActionBar):
     def playbar_widget_slider_update(self, sender, progress):
         mins, seconds = divmod(progress, 60)
         formatted_progress = str(round(mins)) + ':' + str(round(seconds)).zfill(2)
-        #print('Track Progress:', formatted_progress)
+        #Utils().debug(['Track Progress:', formatted_progress])
         self.playwidget_slider.set_range(0, self.player.player_get_track_duration())
         self.playwidget_slider.handler_block(self.playwidget_slider_handler_id)
         self.playwidget_slider.set_value(progress)
