@@ -46,8 +46,6 @@ class MoozikWindow(Gtk.ApplicationWindow):
     search_button = Gtk.Template.Child()
     search_bar = Gtk.Template.Child()
     search_entry = Gtk.Template.Child()
-    #search_results_list = Gtk.Template.Child()
-    #search_widget_revealer = Gtk.Template.Child()
     play_widget_revealer = Gtk.Template.Child()
 
     #menu items
@@ -84,9 +82,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.page_breadcrumbs = []
 
         #connections
-        #self.gmusic.connect('api_logged_in', self.load_library)
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
-        #self.gmusic.connect('album_art_updated', self.album_page.populate_album_view)
         self.gmusic.connect('api_playlists_loaded', self.playlist_page.populate_album_view)
 
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
@@ -95,7 +91,6 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.playlist_page.connect("album_selected_signal", self.album_selected)
         self.search_page.connect("album_selected_signal", self.album_selected)
 
-        #self.settings.set_Utils().debug(False) #set default state
         self.debug_toggle.connect('state-set', self.settings.set_debug)
         self.debug_toggle.set_state(self.settings.get_debug())
 
@@ -109,12 +104,8 @@ class MoozikWindow(Gtk.ApplicationWindow):
        #     Utils().debug('chromecast:', cc.device.friendly_name)
 
     def load_library(self):
-        #Utils().debug('load_library:', 'sender:', sender, 'data:', data)
         init_thread = Thread(target=self.gmusic.load_library, args=())
-        #init_thread.daemon = True
         init_thread.start()
-        #TODO does this need threading?
-        #self.gmusic.load_library()
 
     @Gtk.Template.Callback()
     def back_button_pressed(self, sender):
