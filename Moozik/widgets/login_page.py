@@ -9,6 +9,7 @@ import webbrowser
 class LoginPage(Gtk.EventBox):
 
     code_entry = Gtk.Template.Child()
+    apply_button = Gtk.Template.Child()
 
     __gtype_name__ = 'login_page'
 
@@ -21,6 +22,7 @@ class LoginPage(Gtk.EventBox):
 
         self.url = ""
         self.code = ""
+        #self.apply_button.set_visible(False)
 
     def set_url(self, url):
         self.url = url
@@ -30,14 +32,15 @@ class LoginPage(Gtk.EventBox):
         webbrowser.open(self.url)
 
     @Gtk.Template.Callback()
+    def key_changed(self, sender):
+        if len(self.code_entry.get_text()):
+            self.apply_button.set_visible(True)
+
+    @Gtk.Template.Callback()
     def apply_clicked(self, sender):
         Utils().debug([self.code_entry.get_text()])
         self.code = self.code_entry.get_text()
         self.emit('emit_login_code', self.code)
-        self.close()
-
-    @Gtk.Template.Callback()
-    def cancel_dialog(self,sender):
         self.close()
 
     def close(self):

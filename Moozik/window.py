@@ -113,9 +113,13 @@ class MoozikWindow(Gtk.ApplicationWindow):
     def show_login(self, sender, url):
         self.add_page('login_page')
         Utils().debug(['login requested', url])
+        self.back_button.set_visible(False)
+        self.search_button.set_visible(False)
         self.login_page.set_url(url)
 
     def close_login(self, sender, data):
+        #self.back_button.set_visible(False)
+        self.search_button.set_visible(True)
         self.page_pop()
 
     def load_library(self):
