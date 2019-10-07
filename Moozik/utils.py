@@ -62,6 +62,9 @@ class Utils:
             frame = sys._getframe(1)
             #TODO: delete log file at startup
             debug_out = frame.f_code.co_filename + ' Line:' + str(frame.f_lineno) + ' Debug Data:' + debugline + '\n'
+
+            print(debug_out)
+
             log_file_path = Settings().get_log_file() + '/' + 'moozik.log'
 
             f = open(log_file_path, "a")

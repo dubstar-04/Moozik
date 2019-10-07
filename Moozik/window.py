@@ -33,7 +33,7 @@ from .player import *
 from .settings import *
 from .utils import *
 
-from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage
+from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage, LoginPage
 
 @Gtk.Template(resource_path='/org/gnome/Moozik/ui/window.ui')
 class MoozikWindow(Gtk.ApplicationWindow):
@@ -63,6 +63,8 @@ class MoozikWindow(Gtk.ApplicationWindow):
         #delete any previous logs and get the log file path
         Utils().create_log_file()
 
+        self.login_page = LoginPage()
+
         self.album_page = AlbumPlaylistPage(self.gmusic)
         self.playlist_page = AlbumPlaylistPage(self.gmusic)
         self.main_stack.add_titled(self.album_page, 'album_page', 'Albums')
@@ -72,6 +74,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.track_list_page = TrackListPage(self.gmusic, self.player)
         self.search_page = SearchPage(self.gmusic, self.player)
 
+        self.main_stack.add_named(self.login_page, 'login_page')
         self.main_stack.add_named(self.now_playing_page, 'now_playing_page')
         self.main_stack.add_named(self.track_list_page, 'track_list_page')
         self.main_stack.add_named(self.search_page, 'search_page')
@@ -85,8 +88,12 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.gmusic.connect('api_albums_loaded', self.album_page.populate_album_view)
         self.gmusic.connect('api_playlists_loaded', self.playlist_page.populate_album_view)
 
+        self.gmusic.connect('login_request', self.show_login)
+
         self.play_bar_widget.connect("show_now_playing_signal", self.show_now_playing_page)
 
+        self.login_page.connect("close_login", self.close_login)
+        self.login_page.connect("emit_login_code", self.gmusic.handle_login_code)
         self.album_page.connect("album_selected_signal", self.album_selected)
         self.playlist_page.connect("album_selected_signal", self.album_selected)
         self.search_page.connect("album_selected_signal", self.album_selected)
@@ -102,6 +109,14 @@ class MoozikWindow(Gtk.ApplicationWindow):
        #
        # for cc in chromecasts:
        #     Utils().debug('chromecast:', cc.device.friendly_name)
+
+    def show_login(self, sender, url):
+        self.add_page('login_page')
+        Utils().debug(['login requested', url])
+        self.login_page.set_url(url)
+
+    def close_login(self, sender, data):
+        self.page_pop()
 
     def load_library(self):
         init_thread = Thread(target=self.gmusic.load_library, args=())

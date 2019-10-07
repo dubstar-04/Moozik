@@ -7,7 +7,7 @@ from oauth2client.client import OAuth2WebServerFlow
 import oauth2client.file
 import time
 
-from .widgets import LoginDialog
+from .widgets import LoginPage
 from .utils import *
 from .settings import *
 
@@ -17,7 +17,8 @@ from threading import Thread
 class GmusicAPI(GObject.GObject):
 
 
-    __gsignals__ =  {'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
+    __gsignals__ =  {'login_request' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                     'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
                      'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,GObject.TYPE_PYOBJECT)),
                      'api_playlists_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,GObject.TYPE_PYOBJECT)),
                      'album_art_updated' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
@@ -67,16 +68,24 @@ class GmusicAPI(GObject.GObject):
             flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
             auth_uri = flow.step1_get_authorize_url()
             Utils().debug(['Auth URI', auth_uri])
-            login_dialog = LoginDialog(auth_uri)
-            login_dialog.run()
-            code = login_dialog.get_code()
-            credentials = flow.step2_exchange(code)
-            storage = oauth2client.file.Storage(self.oauth_filename())
-            storage.put(credentials)
-            if os.path.isfile(self.oauth_filename()):
-                return True
-            else:
-                return False
+
+            self.emit('login_request', auth_uri)
+            return False
+
+            #login_dialog = LoginDialog(auth_uri)
+            #login_dialog.run()
+            #code = login_dialog.get_code()
+
+    def handle_login_code(self, sender, code):
+        flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
+        credentials = flow.step2_exchange(code)
+        storage = oauth2client.file.Storage(self.oauth_filename())
+        storage.put(credentials)
+        if os.path.isfile(self.oauth_filename()):
+            self.load_library()
+            return True
+        else:
+            return False
 
     def log_in(self):
 

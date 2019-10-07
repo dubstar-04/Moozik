@@ -5,18 +5,25 @@ from ..utils import *
 
 import webbrowser
 
-@Gtk.Template(resource_path='/org/gnome/Moozik/ui/login_dialog.ui')
-class LoginDialog(Gtk.Dialog):
+@Gtk.Template(resource_path='/org/gnome/Moozik/ui/login_page.ui')
+class LoginPage(Gtk.EventBox):
 
     code_entry = Gtk.Template.Child()
 
-    __gtype_name__ = 'login_dialog'
+    __gtype_name__ = 'login_page'
 
-    def __init__(self, url):
+    __gsignals__ = {'close_login' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool, )),
+                    'emit_login_code' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT, ))
+                    }
+
+    def __init__(self):
         super().__init__()
 
-        self.url = url
+        self.url = ""
         self.code = ""
+
+    def set_url(self, url):
+        self.url = url
 
     @Gtk.Template.Callback()
     def get_key(self, sender):
@@ -26,16 +33,14 @@ class LoginDialog(Gtk.Dialog):
     def apply_clicked(self, sender):
         Utils().debug([self.code_entry.get_text()])
         self.code = self.code_entry.get_text()
+        self.emit('emit_login_code', self.code)
         self.close()
 
     @Gtk.Template.Callback()
     def cancel_dialog(self,sender):
         self.close()
 
-    @Gtk.Template.Callback()
-    def on_response(self, sender, response):
-        Utils().debug(['response'])
+    def close(self):
+        self.emit('close_login', True)
 
-    def get_code(self):
-        return self.code
         
