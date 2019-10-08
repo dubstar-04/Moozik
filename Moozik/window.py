@@ -63,7 +63,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
         #delete any previous logs and get the log file path
         Utils().create_log_file()
 
-        self.login_page = LoginPage()
+        self.login_page = LoginPage(self.gmusic)
 
         self.album_page = AlbumPlaylistPage(self.gmusic)
         self.playlist_page = AlbumPlaylistPage(self.gmusic)
@@ -110,12 +110,10 @@ class MoozikWindow(Gtk.ApplicationWindow):
        # for cc in chromecasts:
        #     Utils().debug('chromecast:', cc.device.friendly_name)
 
-    def show_login(self, sender, url):
+    def show_login(self, sender):
         self.add_page('login_page')
-        Utils().debug(['login requested', url])
         self.back_button.set_visible(False)
         self.search_button.set_visible(False)
-        self.login_page.set_url(url)
 
     def close_login(self, sender, data):
         #self.back_button.set_visible(False)
@@ -199,6 +197,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
     def logout_button_clicked(self, sender):
         Utils().debug(['Logout button clicked'])
         self.gmusic.logout()
+        self.show_login(None)
 
 
 

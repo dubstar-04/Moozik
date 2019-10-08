@@ -17,19 +17,15 @@ class LoginPage(Gtk.EventBox):
                     'emit_login_code' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT, ))
                     }
 
-    def __init__(self):
+    def __init__(self, gmusic):
         super().__init__()
 
-        self.url = ""
-        self.code = ""
-        #self.apply_button.set_visible(False)
-
-    def set_url(self, url):
-        self.url = url
+        self.gmusic = gmusic
 
     @Gtk.Template.Callback()
     def get_key(self, sender):
-        webbrowser.open(self.url)
+        uri = self.gmusic.get_oauth_url()
+        webbrowser.open(uri)
 
     @Gtk.Template.Callback()
     def key_changed(self, sender):

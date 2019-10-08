@@ -17,7 +17,7 @@ from threading import Thread
 class GmusicAPI(GObject.GObject):
 
 
-    __gsignals__ =  {'login_request' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+    __gsignals__ =  {'login_request' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, ()),
                      'api_logged_in' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,)),
                      'api_albums_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,GObject.TYPE_PYOBJECT)),
                      'api_playlists_loaded' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (bool,GObject.TYPE_PYOBJECT)),
@@ -61,20 +61,19 @@ class GmusicAPI(GObject.GObject):
 
 
     def get_oauth_credentials(self):
-
         if os.path.isfile(self.oauth_filename()):
             return True
         else:
-            flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
-            auth_uri = flow.step1_get_authorize_url()
-            Utils().debug(['Auth URI', auth_uri])
-
-            self.emit('login_request', auth_uri)
+            self.emit('login_request')
             return False
 
-            #login_dialog = LoginDialog(auth_uri)
-            #login_dialog.run()
-            #code = login_dialog.get_code()
+
+    def get_oauth_url(self):
+        flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
+        auth_uri = flow.step1_get_authorize_url()
+        Utils().debug(['Auth URI', auth_uri])
+        return auth_uri
+
 
     def handle_login_code(self, sender, code):
         flow = OAuth2WebServerFlow(**gmusicapi.session.Mobileclient().oauth._asdict())
