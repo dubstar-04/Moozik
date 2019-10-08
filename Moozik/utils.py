@@ -68,7 +68,7 @@ class Utils:
             log_file_path = Settings().get_log_file() + '/' + 'moozik.log'
 
             f = open(log_file_path, "a")
-            print("Name of the file: ", f.name)
+            #print("Name of the file: ", f.name)
             f.write(debug_out)
             f.close()
 
@@ -78,7 +78,8 @@ class Utils:
 
         try:
             #delete any old logfiles
-            shutil.rmtree(log_dir)
+            if os.path.exists(log_dir):
+                shutil.rmtree(log_dir)
             os.makedirs(log_dir, mode=0o755, exist_ok=True)
         except OSError as e:
             self.debug(["Error: %s - %s." % (e.filename, e.strerror)])
