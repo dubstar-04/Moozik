@@ -3,6 +3,8 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gst, GObject, Gtk
 from .gmusicapi import *
 from enum import Enum
+from threading import Thread
+import pychromecast
 
 class Player_State(Enum):
     STOPPED = 1
@@ -12,7 +14,8 @@ class Player_State(Enum):
 class Player(GObject.GObject):
 
     Gst.init(None)
-    __gsignals__ =  {'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
+    __gsignals__ =  {'cast_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, ()),
+                     'player_state_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
                      'player_progress_change_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (float,)),
                      'player_playlist_updated_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_BOOLEAN,))}
 
@@ -38,7 +41,12 @@ class Player(GObject.GObject):
         bus.add_signal_watch()
         bus.connect("message", self.player_on_message)
 
+        self.cast_devices = []
+
     def player_play(self):
+        cast_devices_thread = Thread(target=self.search_cast_devices, args=())
+        cast_devices_thread.start()
+        #self.search_cast_devices()
         self.state = Player_State.PLAYING
         self.emit("player_state_change_signal", self.state.value)
         self.player.set_state(Gst.State.PLAYING)
@@ -179,6 +187,21 @@ class Player(GObject.GObject):
 
     def player_get_track_progress(self):
         return self.progress
+
+    def get_cast_devices(self):
+        return self.cast_devices
+
+    def search_cast_devices(self):
+        if Utils().network_available():
+            #TODO: Check for wifi or wired connection
+            self.cast_devices = []
+            chromecasts = pychromecast.get_chromecasts()
+            for cc in chromecasts:
+                Utils().debug(['chromecast:', cc.device.friendly_name])
+                self.cast_devices.append(cc.device.friendly_name)
+
+            if len(self.cast_devices):
+                self.emit("cast_state_change_signal")
 
 
 

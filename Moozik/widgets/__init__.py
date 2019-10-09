@@ -6,3 +6,4 @@ from .track_list_page import TrackListPage
 from .play_bar_widget import PlayBarWidget
 from .login_page import LoginPage
 from .search_page import SearchPage
+from .cast_dialog import CastDialog

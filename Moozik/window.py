@@ -24,9 +24,7 @@ from gi.repository.GdkPixbuf import Pixbuf
 #from gi.repository import Handy
 import time
 from threading import Thread
-from threading import Timer
-
-import pychromecast
+#from threading import Timer
 
 from .gmusicapi import *
 from .player import *
@@ -79,7 +77,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.main_stack.add_named(self.track_list_page, 'track_list_page')
         self.main_stack.add_named(self.search_page, 'search_page')
 
-        self.play_bar_widget = PlayBarWidget(self.gmusic, self.player, self.play_widget_revealer)
+        self.play_bar_widget = PlayBarWidget(self.gmusic, self.player, self.play_widget_revealer, self)
         self.play_widget_revealer.add(self.play_bar_widget)
 
         self.page_breadcrumbs = []
@@ -104,11 +102,6 @@ class MoozikWindow(Gtk.ApplicationWindow):
 
         self.load_library()
 
-       # chromecast example
-       # chromecasts = pychromecast.get_chromecasts()
-       #
-       # for cc in chromecasts:
-       #     Utils().debug('chromecast:', cc.device.friendly_name)
 
     def show_login(self, sender):
         self.add_page('login_page')

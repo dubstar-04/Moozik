@@ -10,5 +10,7 @@
     <file>ui/play_bar_widget.ui</file>
     <file>ui/login_page.ui</file>
     <file>ui/search_page.ui</file>
+    <file>ui/cast_dialog.ui</file>
+    <file>icons/gnomecast.svg</file>
   </gresource>
 </gresources>

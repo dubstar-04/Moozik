@@ -33,6 +33,9 @@ class Utils:
                 # NM_DEVICE_TYPE_MODEM = 8
                 self.debug(['Using GSM!!'])
 
+            if dev_type == 'wifi':
+                self.debug(['Using wifi!!'])
+
             if dev.State == 100:
                 #NM_DEVICE_STATE_UNKNOWN = 0
                 #NM_DEVICE_STATE_UNMANAGED = 10
