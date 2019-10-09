@@ -22,7 +22,8 @@ Moozik is currently a proof of concept and is very buggy and crashes frequently.
 
 ##### Screenshots:
 
-![alt text](https://github.com/dubstar-04/Moozik/blob/master/Screenshots/Moozik.png)
+![alt text](https://github.com/dubstar-04/Moozik/blob/master/Screenshots/Moozik-Albums.png)
 ![alt text](https://github.com/dubstar-04/Moozik/blob/master/Screenshots/Moozik-Casting.png)
+![alt text](https://github.com/dubstar-04/Moozik/blob/master/Screenshots/Moozik-Search.png)
 
 ##### Note: This software is in no way affiliated, endorsed or supported by Google. 
