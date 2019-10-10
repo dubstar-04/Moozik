@@ -1,6 +1,9 @@
+
+![alt text](https://github.com/dubstar-04/Moozik/blob/master/data/icons/hicolor/scalable/apps/org.gnome.Moozik.svg?sanitize=true)
+
 # Moozik
 
-GTK+ Gnome Python App for Google Play Music designed for use on Gnome desktop and librem / Phosh mobile devices.
+Gnome GTK Python App for Google Play Music, designed for use on Gnome desktop and Librem / Phosh mobile devices.
 
 ##### Features:
 
