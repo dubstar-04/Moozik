@@ -8,11 +8,14 @@ Gnome GTK Python App for Google Play Music, designed for use on Gnome desktop an
 ##### Features:
 
 - Loading music library
-- Steaming tracks, albums and playlists (Possibly podcasts too)
+- Steaming tracks, albums and playlists
 - Playlist management, creating & deleting playlists, adding & removing tracks
-- Searching tracks, albums and playlists (possibly podcasts too)
+- Searching tracks, albums and playlists
 - Starting recommended 'radio' playlists
 - Casting music to and controlling of chromecast devices
+
+##### Requirements:
+- A Google Play Music subscribtion is required
 
 ##### Dependencies:
 
