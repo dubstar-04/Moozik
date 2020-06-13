@@ -1,7 +1,7 @@
 {
     "app-id" : "org.gnome.Moozik",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "3.30",
+    "runtime" : "org.gnome.Sdk",
+    "runtime-version" : "3.36",
     "sdk" : "org.gnome.Sdk",
     "command" : "moozik",
     "finish-args" : [
