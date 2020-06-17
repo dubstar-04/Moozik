@@ -27,10 +27,20 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         self.gmusic = gmusic
         self.player = player
+        self.title = ""
+        self.now_playing_mode = False
         #self.playlist_listview.set_header_func(Utils().list_header_func, None)
+        self.player.connect("player_playlist_updated_signal", self.update_playlist)
+
+    def update_playlist(self, sender, child):
+        tracks = self.player.player_get_playlist()
+        if self.now_playing_mode:
+            self.populate_listview(tracks, self.title, self.now_playing_mode)
 
     def populate_listview(self, tracks, title, now_playing_mode=False):
 
+        self.title = title
+        self.now_playing_mode = now_playing_mode
         for track in self.playlist_listview.get_children():
             self.playlist_listview.remove(track)
 
@@ -78,10 +88,11 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         #TODO sort tracks by album order
         for track in tracks:
-            play_list_track = ListboxRow(track)
+            play_list_track = ListboxRow(track, now_playing_mode)
             #play_list_track.load_data(track.get('title'), track.get('artist'))
             play_list_track.connect("play_track_signal", self.player.player_play_single_track)
             play_list_track.connect("add_to_queue_signal", self.player.player_add_to_playlist)
+            play_list_track.connect("remove_from_queue_signal", self.player.player_remove_from_playlist)
             play_list_track.connect("play_station_signal", self.player.player_play_radio_station)
             self.playlist_listview.add(play_list_track)
 
