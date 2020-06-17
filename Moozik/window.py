@@ -31,7 +31,7 @@ from .player import *
 from .settings import *
 from .utils import *
 
-from .widgets import ListboxRow, NowPlayingPage, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage, LoginPage
+from .widgets import ListboxRow, AlbumPlaylistPage, TrackListPage, PlayBarWidget, SearchPage, LoginPage
 
 @Gtk.Template(resource_path='/org/gnome/Moozik/ui/window.ui')
 class MoozikWindow(Gtk.ApplicationWindow):
@@ -68,7 +68,7 @@ class MoozikWindow(Gtk.ApplicationWindow):
         self.main_stack.add_titled(self.album_page, 'album_page', 'Albums')
         self.main_stack.add_titled(self.playlist_page, 'playlists_page', 'Playlists')
 
-        self.now_playing_page = NowPlayingPage(self.gmusic, self.player)
+        self.now_playing_page = TrackListPage(self.gmusic, self.player)
         self.track_list_page = TrackListPage(self.gmusic, self.player)
         self.search_page = SearchPage(self.gmusic, self.player)
 
@@ -174,10 +174,13 @@ class MoozikWindow(Gtk.ApplicationWindow):
         current_page = self.add_page('now_playing_page')
         if current_page:
             Utils().debug(['now_playing_page is current page'])
-            self.now_playing_page.load_current_playlist()
+            tracks = self.player.player_get_playlist()
+            title = "Now Playing"
+            self.now_playing_page.populate_listview(tracks, title, now_playing_mode=True)
+            #self.now_playing_page.load_current_playlist()
 
     def album_selected(self, sender, tracks, title):
-        self.track_list_page.populate_listview(tracks, title)
+        self.track_list_page.populate_listview(tracks, title, now_playing_mode=False)
         self.add_page('track_list_page')
 
 
