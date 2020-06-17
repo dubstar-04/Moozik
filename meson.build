@@ -17,6 +17,7 @@ dependency('glib-2.0')
 dependency('gobject-2.0')
 dependency('gobject-introspection-1.0')
 dependency('gtk+-3.0', version :'>=3.16')
+dependency('libhandy-1', version :'>=0.81')
 
 BIN_DIR    = join_paths(get_option('prefix'), get_option('bindir'))
 PYTHON_DIR = join_paths(get_option('prefix'), python.sysconfig_path('purelib'))

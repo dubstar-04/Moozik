@@ -1,6 +1,6 @@
 {
     "app-id" : "org.gnome.Moozik",
-    "runtime" : "org.gnome.Sdk",
+    "runtime" : "org.gnome.Platform",
     "runtime-version" : "3.36",
     "sdk" : "org.gnome.Sdk",
     "command" : "moozik",
@@ -20,8 +20,8 @@
         "cflags" : "-O2 -g",
         "cxxflags" : "-O2 -g",
         "env" : {
-            "V" : "1",
-            "gtk-debug" : "none"
+            "gtk-debug" : "none",
+            "V" : "1"
         }
     },
     "cleanup" : [
@@ -40,7 +40,7 @@
             "name" : "libhandy",
             "buildsystem" : "meson",
             "config-opts" : [
-                "-Dintrospection=disabled",
+                "-Dintrospection=enabled",
                 "-Dgtk_doc=false",
                 "-Dtests=false",
                 "-Dexamples=false",
@@ -54,7 +54,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "https://source.puri.sm/Librem5/libhandy.git"
+                    "url" : "https://gitlab.gnome.org/GNOME/libhandy.git"
                 }
             ]
         },
@@ -284,7 +284,6 @@
                 "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} python-networkmanager"
             ],
             "sources" : [
-
                 {
                     "type" : "file",
                     "url" : "https://files.pythonhosted.org/packages/73/ec/2cc46290cedc99f59df3633d428dfa91d95946ca49af96fdb53514ee195f/python-networkmanager-2.1.tar.gz",
