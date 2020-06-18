@@ -18,12 +18,10 @@ class ListboxRow(Handy.ActionRow):
                      'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
 
     #TODO Add the track length in time
-    #listbox_row_popover = Gtk.Template.Child()
     #row_drag_handle = Gtk.Template.Child()
 
-    def __init__(self, track, now_playing_mode=False, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, track, player, now_playing_mode=False):
+        super().__init__()
 
         self.track = track
         self.title = self.track.get('title')
@@ -32,9 +30,7 @@ class ListboxRow(Handy.ActionRow):
         self.set_title(self.title)
         self.set_subtitle(self.subtitle)
 
-        self.now_playing_mode = now_playing_mode
         ## work around handyactionrow not been supported in glade
-
         self.more_menu = Gtk.Button()
         self.menu_image = Gtk.Image()
         self.menu_image.set_from_icon_name('view-more-symbolic', Gtk.IconSize.BUTTON)#
@@ -52,8 +48,11 @@ class ListboxRow(Handy.ActionRow):
 
         #only show the drag handle if drag and drop is being used
         #self.row_drag_handle.set_visible(DnD)
+        self.now_playing_mode = now_playing_mode
         if now_playing_mode:
-            self.set_icon_name('open-menu-symbolic')
+            self.player = player
+            self.player.connect("player_state_change_signal", self.set_status)
+            self.set_status()
 
         #Drag and Drop
         #target = Gtk.TargetEntry.new('Gtk.ListBoxRow', Gtk.TargetFlags(1), 129)
@@ -119,6 +118,13 @@ class ListboxRow(Handy.ActionRow):
         #self.emit("queue_track_selected_signal", self.get_parent().get_index())
         self.emit("play_track_signal", self.track)
 
+    def set_status(self, sender=None, child=None):
+        self.set_icon_name('open-menu-symbolic')
+        if self.track == self.player.player_get_playing_track():
+            print("its me")
+            self.set_icon_name('media-playback-start-symbolic')
+
+
     def show_popup_menu(self, sender):
         Utils().debug(['Show More Menu:', self.track])
         #popover = PlayListPopover()
@@ -138,8 +144,6 @@ class ListboxRow(Handy.ActionRow):
             if index != 0:
                 vbox.pack_start(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, True, 3)
             vbox.pack_start(menu_item_1, False, True, 3)
-
-
 
         vbox.set_margin_left(18)
         vbox.set_margin_right(18)
