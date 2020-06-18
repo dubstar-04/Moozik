@@ -5,8 +5,6 @@
   <template class="play_bar_widget" parent="GtkActionBar">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="margin_left">6</property>
-    <property name="margin_right">6</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -17,6 +15,8 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">6</property>
+            <property name="margin_right">6</property>
             <child>
               <object class="GtkScale" id="playwidget_slider">
                 <property name="visible">True</property>
@@ -55,6 +55,8 @@
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">6</property>
+            <property name="margin_right">6</property>
             <property name="hexpand">True</property>
             <child>
               <object class="GtkButton" id="play_widget_play_pause_button">
@@ -115,6 +117,7 @@
                             <property name="can_focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">-</property>
+                            <property name="ellipsize">end</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
                             </attributes>
@@ -131,6 +134,7 @@
                             <property name="can_focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">-</property>
+                            <property name="ellipsize">end</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>

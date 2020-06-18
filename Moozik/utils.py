@@ -21,22 +21,24 @@ class Utils:
 
     def network_available(self):
 
-        c = NetworkManager.const
+        return True
 
-        for dev in NetworkManager.NetworkManager.GetDevices():
-            dev_type = c('device_type', dev.DeviceType)
-            state = c('device_state', dev.State)
+        # c = NetworkManager.const
 
-            self.debug(['network - device:', dev_type, 'state:', state, dev.State])
+        # for dev in NetworkManager.NetworkManager.GetDevices():
+        #     dev_type = c('device_type', dev.DeviceType)
+        #     state = c('device_state', dev.State)
 
-            if dev_type == 'Modem':
+        #     self.debug(['network - device:', dev_type, 'state:', state, dev.State])
+
+        #     if dev_type == 'Modem':
                 # NM_DEVICE_TYPE_MODEM = 8
-                self.debug(['Using GSM!!'])
+        #         self.debug(['Using GSM!!'])
 
-            if dev_type == 'wifi':
-                self.debug(['Using wifi!!'])
+        #     if dev_type == 'wifi':
+        #         self.debug(['Using wifi!!'])
 
-            if dev.State == 100:
+        #     if dev.State == 100:
                 #NM_DEVICE_STATE_UNKNOWN = 0
                 #NM_DEVICE_STATE_UNMANAGED = 10
                 #NM_DEVICE_STATE_UNAVAILABLE = 20
@@ -49,10 +51,10 @@ class Utils:
                 #NM_DEVICE_STATE_SECONDARIES = 90
                 #NM_DEVICE_STATE_ACTIVATED = 100
                 #NM_DEVICE_STATE_DEACTIVATING = 110
-                self.debug(['connection available'])
-                return True
+        #         self.debug(['connection available'])
+        #         return True
 
-        return False
+        # return False
 
     def debug(self, data):
 

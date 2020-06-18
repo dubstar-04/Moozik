@@ -2,9 +2,13 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <requires lib="libhandy" version="0.0"/>
   <object class="GtkAboutDialog" id="about_dialog">
     <property name="can_focus">False</property>
+    <property name="type">popup</property>
+    <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
+    <property name="gravity">center</property>
     <property name="program_name">Moozik</property>
     <property name="version">0.0.1</property>
     <property name="copyright" translatable="yes">Daniel Wood 2019
@@ -233,7 +237,7 @@ Paulus Schoutsen - pychromecast https://github.com/balloob</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkSearchBar" id="search_bar">
+          <object class="HdySearchBar" id="search_bar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>

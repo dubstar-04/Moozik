@@ -1,10 +1,10 @@
 [default]
 name=Default
-runtime=host
+runtime=flatpak:org.gnome.Sdk/aarch64/3.34
 toolchain=default
 config-opts=
 run-opts=
-prefix=/home/sandal/.var/app/org.gnome.Builder/cache/gnome-builder/install/Moozik/host
+prefix=/app
 app-id=
 postbuild=
 prebuild=

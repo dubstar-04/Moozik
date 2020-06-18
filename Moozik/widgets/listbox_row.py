@@ -1,49 +1,71 @@
 import os, gi, cairo
 from gi.repository import Gtk, GObject, Gdk
+gi.require_version('Handy', '1')
+from gi.repository import Handy
 from gi.repository.GdkPixbuf import Pixbuf
 from ..utils import *
 
 @Gtk.Template(resource_path='/org/gnome/Moozik/ui/listbox_row.ui')
-class ListboxRow(Gtk.EventBox):
+class ListboxRow(Handy.ActionRow):
 
     __gtype_name__ = 'listbox_row'
 
     __gsignals__ = {#'queue_track_selected_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
-                    'remove_from_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
-                    'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
-                    'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
-                    'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
-                    'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
-
-    list_box_row_track = Gtk.Template.Child()
-    list_box_row_artist = Gtk.Template.Child()
-    list_box_row_album_art = Gtk.Template.Child()
+                     'remove_from_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (int,)),
+                     'reorder_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                     'play_track_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                     'add_to_queue_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
+                     'play_station_signal' : (GObject.SIGNAL_RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))}
 
     #TODO Add the track length in time
-    listbox_row_popover = Gtk.Template.Child()
-    row_drag_handle = Gtk.Template.Child()
+    #listbox_row_popover = Gtk.Template.Child()
+    #row_drag_handle = Gtk.Template.Child()
 
-    def __init__(self, track, DnD=False):
-        super().__init__()
+    def __init__(self, track, now_playing_mode=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 
         self.track = track
-        #self.load_data()
+        self.title = self.track.get('title')
+        self.subtitle = self.track.get('artist')
+
+        self.set_title(self.title)
+        self.set_subtitle(self.subtitle)
+
+        self.now_playing_mode = now_playing_mode
+        ## work around handyactionrow not been supported in glade
+
+        self.more_menu = Gtk.Button()
+        self.menu_image = Gtk.Image()
+        self.menu_image.set_from_icon_name('view-more-symbolic', Gtk.IconSize.BUTTON)#
+        builder = Gtk.Builder()
+        self.more_menu.add_child(builder, self.menu_image)
+        self.more_menu.connect('clicked', self.show_popup_menu)
+        menu_style_context = self.more_menu.get_style_context()
+        menu_style_context.add_class("flat")
+
+        self.add_child(builder, self.more_menu)
+        self.set_activatable(True)
+        self.connect("activated", self.playlist_track_selected)
+
+        self.popover = Gtk.Popover()
 
         #only show the drag handle if drag and drop is being used
-        self.row_drag_handle.set_visible(DnD)
+        #self.row_drag_handle.set_visible(DnD)
+        if now_playing_mode:
+            self.set_icon_name('open-menu-symbolic')
 
         #Drag and Drop
-        target = Gtk.TargetEntry.new('Gtk.ListBoxRow', Gtk.TargetFlags(1), 129)
+        #target = Gtk.TargetEntry.new('Gtk.ListBoxRow', Gtk.TargetFlags(1), 129)
 
         #source
-        self.row_drag_handle.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, [target], Gdk.DragAction.MOVE);
-        self.row_drag_handle.connect("drag-data-get", self.on_drag_data_get)
-        self.row_drag_handle.connect("drag-begin", self.on_drag_begin)
+        #self.row_drag_handle.drag_source_set(Gdk.ModifierType.BUTTON1_MASK, [target], Gdk.DragAction.MOVE);
+        #self.row_drag_handle.connect("drag-data-get", self.on_drag_data_get)
+        #self.row_drag_handle.connect("drag-begin", self.on_drag_begin)
 
         #destination
-        self.drag_dest_set(Gtk.DestDefaults.ALL, [target], Gdk.DragAction.MOVE)
-        self.connect("drag-data-received", self.on_drag_data_received)
-
+        #self.drag_dest_set(Gtk.DestDefaults.ALL, [target], Gdk.DragAction.MOVE)
+        #self.connect("drag-data-received", self.on_drag_data_received)
 
     def on_drag_begin(self, widget, drag_context):
         Utils().debug(['drag-begin'])
@@ -71,50 +93,61 @@ class ListboxRow(Gtk.EventBox):
         Utils().debug(['source_index:', source_index, 'target_index:', target_index])
         self.emit("reorder_signal", [source_index, target_index])
 
-    @Gtk.Template.Callback()
     def add_to_queue_clicked(self, sender, child):
         self.emit("add_to_queue_signal", [self.track])
-        self.listbox_row_popover.popdown()
+        self.popover.popdown()
 
- #   @Gtk.Template.Callback()
- #   def remove_from_queue_clicked(self, sender, child):
- #       Utils().debug([sender, child])
- #       Utils().debug(['Remove From Queue clicked - Index:', self.get_parent().get_index()])
- #       self.listbox_row_popover.popdown()
- #       self.emit("remove_from_queue_signal", self.get_parent().get_index())
+    def remove_from_queue_clicked(self, sender, child):
+        Utils().debug([sender, child])
+        Utils().debug(['Remove From Queue clicked - Index:', self.get_index()])
+        self.popover.popdown()
+        self.emit("remove_from_queue_signal", self.get_index())
 
-    @Gtk.Template.Callback()
-    def add_to_playlist_clicked(self, sender, child):
-        Utils().debug(['Add to playlist:', self.track])
+ #    @Gtk.Template.Callback()
+ #    def add_to_playlist_clicked(self, sender, child):
+ #        Utils().debug(['Add to playlist:', self.track])
         #self.listbox_row_popover.popdown()
 
-    @Gtk.Template.Callback()
     def start_radio_clicked(self, sender, child):
         Utils().debug(['start radio:', self.track.get('title')])
-        self.listbox_row_popover.popdown()
+        self.popover.popdown()
         self.emit("play_station_signal", [self.track.get('id')])
 
-
-    @Gtk.Template.Callback()
-    def playlist_track_selected(self, sender, child):
+    #@Gtk.Template.Callback()
+    def playlist_track_selected(self, sender):
         Utils().debug(['Track Clicked:', self.track])
         #self.emit("queue_track_selected_signal", self.get_parent().get_index())
         self.emit("play_track_signal", self.track)
 
-    @Gtk.Template.Callback()
-    def playlist_view_more_clicked(self, sender, child):
-        Utils().debug(["Playlist More Clicked"])
-        self.listbox_row_popover.popup()
+    def show_popup_menu(self, sender):
+        Utils().debug(['Show More Menu:', self.track])
+        #popover = PlayListPopover()
 
-    def load_data(self, title, subtitle):
-        self.list_box_row_track.set_text(title)
-        self.list_box_row_artist.set_text(subtitle)
+        popup_menu_items = [("Add To Queue", self.add_to_queue_clicked), ("Start Radio", self.start_radio_clicked)]
 
-    def load_album_art(self, album_art_path):
+        if self.now_playing_mode:
+            popup_menu_items = [("Remove From Queue", self.remove_from_queue_clicked), ("Start Radio", self.start_radio_clicked)]
 
-        #album_art_path = album.get("album_art_path")
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self.list_box_row_album_art.set_visible(True)
+        for index, menu_item in enumerate(popup_menu_items):
+            print(menu_item[0], menu_item[1])
+            menu_item_1 = Gtk.EventBox()
+            menu_item_1.add(Gtk.Label(menu_item[0]))
+            menu_item_1.connect("button-press-event", menu_item[1])
+            if index != 0:
+                vbox.pack_start(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, True, 3)
+            vbox.pack_start(menu_item_1, False, True, 3)
 
-        if os.path.isfile(album_art_path):
-            self.list_box_row_album_art.set_from_pixbuf(Pixbuf.new_from_file_at_size(album_art_path, 40, 40))
+
+
+        vbox.set_margin_left(18)
+        vbox.set_margin_right(18)
+        vbox.set_margin_top(18)
+        vbox.set_margin_bottom(18)
+
+        self.popover.add(vbox)
+        self.popover.set_position(Gtk.PositionType.BOTTOM)
+        self.popover.set_relative_to(sender)
+        self.popover.show_all()
+        self.popover.popup()

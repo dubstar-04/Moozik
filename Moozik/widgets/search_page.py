@@ -65,7 +65,9 @@ class SearchPage(Gtk.EventBox):
                 search_result.connect("add_to_queue_signal", self.player.player_add_to_playlist)
                 search_result.connect("play_station_signal", self.player.player_play_radio_station)
 
-                search_result.load_data(item.get('title'), subtitle)
-                search_result.load_album_art(item.get('album_art_path'))
+                #search_result.load_data(item.get('title'), subtitle)
+                #search_result.load_album_art(item.get('album_art_path'))
                 self.search_listview.add(search_result)
+
+            self.search_listview.show_all()
         
