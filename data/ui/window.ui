@@ -2,6 +2,7 @@
 <!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <requires lib="libhandy" version="0.0"/>
   <object class="GtkAboutDialog" id="about_dialog">
     <property name="can_focus">False</property>
     <property name="type">popup</property>
@@ -236,7 +237,7 @@ Paulus Schoutsen - pychromecast https://github.com/balloob</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkSearchBar" id="search_bar">
+          <object class="HdySearchBar" id="search_bar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
