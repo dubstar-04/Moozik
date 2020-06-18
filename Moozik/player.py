@@ -74,6 +74,8 @@ class Player(GObject.GObject):
             self.playlist.append(track)
 
         Utils().debug(['playlist updated:', self.playlist])
+        if self.state != Player_State.PLAYING:
+            self.player_get_next_track()
 
     def player_remove_from_playlist(self, widget, index):
         self.playlist.pop(index)
@@ -104,7 +106,8 @@ class Player(GObject.GObject):
         t = message.type
         #Utils().debug('dbus message:', t)
         if t == Gst.MessageType.EOS:
-            self.player.set_state(Gst.State.NULL)
+            self.player.set_
+            state(Gst.State.NULL)
         elif t == Gst.MessageType.ERROR:
             self.player.set_state(Gst.State.NULL)
             err, debug = message.parse_error()

@@ -17,6 +17,7 @@ class TrackListPage(Gtk.ScrolledWindow):
     playlist_album_title = Gtk.Template.Child()
     playlist_artist = Gtk.Template.Child()
     playlist_listview = Gtk.Template.Child()
+    play_all_button = Gtk.Template.Child()
 
     #TODO add ability to reorder playlist
     #TODO add ability to save playlist
@@ -41,6 +42,7 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         self.title = title
         self.now_playing_mode = now_playing_mode
+
         for track in self.playlist_listview.get_children():
             self.playlist_listview.remove(track)
 
@@ -75,6 +77,7 @@ class TrackListPage(Gtk.ScrolledWindow):
 
         if now_playing_mode:
             subtitle = self.get_track_count(len(tracks))
+            self.play_all_button.set_visible(False)
 
         self.playlist_album_title.set_text(album_title)
         self.playlist_artist.set_text(subtitle)
@@ -105,3 +108,15 @@ class TrackListPage(Gtk.ScrolledWindow):
             track_count = '%d track' % count
 
         return track_count
+
+    @Gtk.Template.Callback()
+    def play_all_clicked(self, sender):
+        print("play all clicked")
+        tracks = []
+        for row in self.playlist_listview.get_children():
+            tracks.append(row.track)
+
+        if len(tracks) > 0:
+            self.player.player_add_to_playlist(None, tracks)
+        #for track in self.playlist_listview.get_children():
+        #    self.player.player_add_to_playlist()
